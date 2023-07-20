@@ -119,8 +119,13 @@ start_t = time.time()
 
 # limit number of processes to about 75% of the number available: dotnet-coverage does
 # not use a complete processing unit
-with multiprocessing.Pool(processes=int(multiprocessing.cpu_count() * 3 / 4)) as pool:
-    pool.map(dotest, files)
+if CC == True:
+    with multiprocessing.Pool(processes=int(multiprocessing.cpu_count() * 3 / 4)) as pool:
+        pool.map(dotest, files)
+ 
+else:
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+        pool.map(dotest, files)
 
 # special cases
 if do_special_cases:

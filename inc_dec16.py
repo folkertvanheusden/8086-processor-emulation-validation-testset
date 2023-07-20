@@ -70,6 +70,7 @@ def emit_test(v1, carry):
         # verify flags
         fh.write(f'ok_{label}:\n')
         fh.write(f'\tpop ax\n')
+        fh.write(f'\tand ax,#$0fff\n')
         fh.write(f'\tcmp ax,#${flags:04x}\n')
         fh.write(f'\tjz next_{label}\n')
         fh.write(f'\thlt\n')

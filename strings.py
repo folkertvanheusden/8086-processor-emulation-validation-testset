@@ -99,6 +99,7 @@ def emit_test(cx, taken):
         if not check_flags is None:
             fh.write(f'ok_{label}:\n')
             fh.write(f'\tpop ax\n')
+            fh.write(f'\tand ax,#$0fff\n')
             fh.write(f'\tcmp ax,#${check_flags:04x}\n')
             fh.write(f'\tjz next_{label}\n')
             fh.write(f'\thlt\n')

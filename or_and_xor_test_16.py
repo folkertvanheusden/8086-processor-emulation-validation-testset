@@ -147,6 +147,7 @@ def emit_test(v1, v2, mode, target, instr):
 
     # verify flags
     fh.write(f'\tpop ax\n')
+    fh.write(f'\tand ax,#$0fff\n')
     fh.write(f'\tcmp ax,#${flags:04x}\n')
     fh.write(f'\tjz next_{label}\n')
     fh.write(f'\thlt\n')

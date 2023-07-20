@@ -186,6 +186,7 @@ test_007:
     sahf
     pushf
     pop ax
+    and ax,#$0fff
     cmp al,#$d7
     beq test_007_ok1
     hlt
@@ -201,6 +202,7 @@ test_008:
     sti
     pushf
     pop ax
+    and ax,#$0fff
     and ax,#$200
     cmp ax,#512
     beq test_008_ok1

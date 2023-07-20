@@ -31,8 +31,8 @@ Ubuntu linux as86 can be found in the bin86 package).
 
 how to run
 ----------
-After you've assembled a .bin-file, load it into memory at 0x800 and
-start running at 0x800. They should all finish in a fraction of a second.
+After you've assembled a .bin-file, load it into memory at 0x0000 and
+start running at 0x0800. They should all finish in a fraction of a second.
 
 When successfully executed, 0xa5ee in the SI register and then HLT is
 invoked. A failed test only runs HLT at some point.

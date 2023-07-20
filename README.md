@@ -43,9 +43,14 @@ bugs
 If you find any bugs or any other problems with this test-set, please
 contact me at mail@vanheusden.com
 
-Note that this test set is not complete yet (July 20, 2023).
-Also this version expects the upper 4 bit of the flags-register to be '0',
-in practice they are (on an 8088) '1'.
+
+notes
+-----
+This test set is not entirely complete yet (July 20, 2023).
+
+Also this version ignores the upper 4 bit of the flags-register: they are
+specified to undefined (in practice they're 1). On the other hand bit 1
+and 5 *are* checked. This inconsistency must (will) be fixed.
 
 
 license

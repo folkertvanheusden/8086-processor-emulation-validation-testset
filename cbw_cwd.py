@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from helpers import emit_header
+from helpers import emit_header, emit_tail
 import sys
 
 p = sys.argv[1]
@@ -36,7 +36,6 @@ for test_v in (0, 127, 128, 129, 255, 254, 32766, 32767, 32768, 32769, 65535, 65
     fh.write(f'\thlt\n')
     fh.write(f'{label2}:\n')
 
-fh.write('\tmov ax,#$a5ee\n')
-fh.write('\tmov si,ax\n')  # set si to 'finished successfully'
-fh.write('\thlt\n')
+emit_tail(fh)
+
 fh.close()

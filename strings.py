@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_inc_dec16
-from helpers import emit_header
+from helpers import emit_header, emit_tail
 from values_16b import b16_values
 import sys
 
@@ -11,14 +11,6 @@ fh = None
 n_tests = 0
 
 nr = 0
-
-def emit_tail():
-    global fh
-
-    # to let emulator know all was fine
-    fh.write('\tmov ax,#$a5ee\n')
-    fh.write('\tmov si,ax\n')
-    fh.write('\thlt\n')
 
 def header():
     global fh
@@ -117,7 +109,7 @@ def emit_test(cx, taken):
         n_tests += 1
 
         if (n_tests % 512) == 0:
-            emit_tail()
+            emit_tail(fh)
 
             fh.close()
             fh = None
@@ -211,5 +203,6 @@ cx0_rep_ok2:
 cx0_rep_ok3:
 ''')
 
-emit_tail()
+emit_tail(fh)
+
 fh.close()

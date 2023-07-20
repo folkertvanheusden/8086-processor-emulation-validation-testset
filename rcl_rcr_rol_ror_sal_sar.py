@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_rcl, flags_rcr, flags_rol, flags_ror, flags_sal, flags_sar, flags_shr
-from helpers import emit_header
+from helpers import emit_header, emit_tail
 from values_16b import b16_values
 import sys
 
@@ -17,10 +17,7 @@ def emit_test(width, v1, shift, carry, instr):
 
     if (n % 512) == 0:
         if fh != None:
-            # to let emulator know all was fine
-            fh.write('\tmov ax,#$a5ee\n')
-            fh.write('\tmov si,ax\n')
-            fh.write('\thlt\n')
+            emit_tail(fh)
 
             fh.close()
 
@@ -137,7 +134,6 @@ for v1 in b16_values:
 
             emit_test(16, v1, None, carry, instr)
 
-fh.write('\tmov ax,#$a5ee\n')
-fh.write('\tmov si,ax\n')
-fh.write('\thlt\n')
+emit_tail(fh)
+
 fh.close()

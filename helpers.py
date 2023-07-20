@@ -13,3 +13,8 @@ def emit_header(fh):
     fh.write('\tmov ax,#$800\n')  # set stack pointer
     fh.write('\tmov sp,ax\n')  # set stack pointer
 
+def emit_tail(fh):
+    # to let emulator know all was fine
+    fh.write('\tmov ax,#$a5ee\n')
+    fh.write('\tmov si,ax\n')
+    fh.write('\thlt\n')

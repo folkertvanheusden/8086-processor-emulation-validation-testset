@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_or, flags_and, flags_xor
-from helpers import emit_header
+from helpers import emit_header, emit_tail
 from values_16b import get_pairs_16b
 import sys
 
@@ -16,10 +16,7 @@ def emit_test(v1, v2, mode, target, instr):
 
     if (n % 512) == 0:
         if fh != None:
-            # to let emulator know all was fine
-            fh.write('\tmov ax,#$a5ee\n')
-            fh.write('\tmov si,ax\n')
-            fh.write('\thlt\n')
+            emit_tail(fh)
 
             fh.close()
 
@@ -166,7 +163,6 @@ for mode in range(0, 4):
                 emit_test(pair[0], pair[1], mode, target, instr)
 
 if fh != None:
-    fh.write('\tmov ax,#$a5ee\n')
-    fh.write('\tmov si,ax\n')
-    fh.write('\thlt\n')
+    emit_tail(fh)
+
     fh.close()

@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from helpers import emit_header
+from helpers import emit_header, emit_tail
 import sys
 
 p = sys.argv[1]
@@ -361,7 +361,6 @@ test_010_ok2:
 finish:
 ''')
 
-fh.write('\tmov ax,#$a5ee\n')
-fh.write('\tmov si,ax\n')  # set si to 'finished successfully'
-fh.write('\thlt\n')
+emit_tail(fh)
+
 fh.close()

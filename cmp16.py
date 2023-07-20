@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_cmp16
-from helpers import emit_header
+from helpers import emit_header, emit_tail
 from values_16b import get_pairs_16b
 import sys
 
@@ -11,14 +11,6 @@ fh = None
 n_tests = 0
 
 nr = 0
-
-def emit_tail():
-    global fh
-
-    # to let emulator know all was fine
-    fh.write('\tmov ax,#$a5ee\n')
-    fh.write('\tmov si,ax\n')
-    fh.write('\thlt\n')
 
 def emit_test(v1, v2, carry):
     global fh
@@ -95,7 +87,7 @@ def emit_test(v1, v2, carry):
         n_tests += 1
 
         if (n_tests % 512) == 0:
-            emit_tail()
+            emit_tail(fh)
 
             fh.close()
             fh = None
@@ -104,5 +96,5 @@ for carry in (False, True):
     for pair in get_pairs_16b():
         emit_test(pair[0], pair[1], carry)
 
-emit_tail()
+emit_tail(fh)
 fh.close()

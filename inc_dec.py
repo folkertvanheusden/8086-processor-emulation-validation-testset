@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_inc_dec
-from helpers import emit_header
+from helpers import emit_header, emit_tail
 import sys
 
 p = sys.argv[1]
@@ -79,7 +79,6 @@ for al in range(0, 256):
             fh.write(f'next_{label}:\n')
             fh.write('\n')
 
-fh.write('\tmov ax,#$a5ee\n')
-fh.write('\tmov si,ax\n')
-fh.write('\thlt\n')
+emit_tail(fh)
+
 fh.close()

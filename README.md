@@ -43,6 +43,8 @@ bugs
 If you find any bugs or any other problems with this test-set, please
 contact me at mail@vanheusden.com
 
+Note that this test set is not complete yet (July 20, 2023).
+
 
 license
 -------

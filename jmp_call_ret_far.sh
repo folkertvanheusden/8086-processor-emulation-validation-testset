@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 $(dirname "$0")/jmp_call_ret_far.py /tmp
 

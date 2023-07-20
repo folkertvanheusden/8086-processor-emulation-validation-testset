@@ -10,8 +10,8 @@ python3 cmp16.py tests
 python3 inc_dec.py tests
 python3 inc_dec16.py tests
 python3 jmp_call_ret.py tests
-python3 jmp_call_ret_far.sh tests
-python3 jmp_call_ret_far2.sh tests
+./jmp_call_ret_far.sh tests
+./jmp_call_ret_far2.sh tests
 python3 misc.py tests
 python3 misc2.py tests
 python3 misc2b.py tests

@@ -52,6 +52,8 @@ Also this version ignores the upper 4 bit of the flags-register: they are
 specified to undefined (in practice they're 1). On the other hand bit 1
 and 5 *are* checked. This inconsistency must (will) be fixed.
 
+run\_tests.py is a convenience script for testing the DotXT emulator.
+
 
 license
 -------

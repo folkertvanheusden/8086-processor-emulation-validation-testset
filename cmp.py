@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_cmp
+from helpers import emit_header
 import sys
 
 p = sys.argv[1]
@@ -17,15 +18,7 @@ def emit_test(al, val, carry, instr):
 
         fh = open(p + '/' + file_name, 'w')
 
-        fh.write('\torg $800\n')
-        fh.write('\n')
-
-        fh.write('\txor ax,ax\n')
-        fh.write('\tmov si,ax\n')
-        fh.write('\n')
-        fh.write('\tmov ss,ax\n')  # set stack segment to 0
-        fh.write('\tmov ax,#$800\n')  # set stack pointer
-        fh.write('\tmov sp,ax\n')  # set stack pointer
+        emit_header(fh)
 
     label = f'test_{instr}_{al:02x}_{val:02x}_{carry}_{nr}'
 

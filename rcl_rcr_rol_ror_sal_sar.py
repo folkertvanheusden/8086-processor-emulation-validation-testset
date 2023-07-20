@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_rcl, flags_rcr, flags_rol, flags_ror, flags_sal, flags_sar, flags_shr
+from helpers import emit_header
 from values_16b import b16_values
 import sys
 
@@ -30,15 +31,7 @@ def emit_test(width, v1, shift, carry, instr):
 
         fh = open(p + '/' + file_name, 'w')
 
-        fh.write('\torg $800\n')
-        fh.write('\n')
-
-        fh.write('\txor ax,ax\n')
-        fh.write('\tmov si,ax\n')
-        fh.write('\n')
-        fh.write('\tmov ss,ax\n')  # set stack segment to 0
-        fh.write('\tmov ax,#$800\n')  # set stack pointer
-        fh.write('\tmov sp,ax\n')  # set stack pointer
+        emit_header(fh)
 
     n += 1
 

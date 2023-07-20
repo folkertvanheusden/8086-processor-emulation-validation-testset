@@ -1,20 +1,13 @@
 #! /usr/bin/python3
 
+from helpers import emit_header
 import sys
 
 p = sys.argv[1]
 
 fh = open(p + '/' + 'cbw_cwd.asm', 'w')
 
-fh.write('\torg $800\n')
-fh.write('\n')
-
-fh.write('\txor ax,ax\n')
-fh.write('\tmov si,ax\n')  # set si to 'still running'
-fh.write('\n')
-fh.write('\tmov ss,ax\n')  # set stack segment to 0
-fh.write('\tmov ax,#$800\n')  # set stack pointer
-fh.write('\tmov sp,ax\n')  # set stack pointer
+emit_header(fh)
 
 for test_v in (0, 127, 128, 129, 255, 254):
     fh.write('\tmov ah, #123\n')

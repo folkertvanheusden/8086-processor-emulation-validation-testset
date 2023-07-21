@@ -17,10 +17,7 @@ for al in range(0, 256):
         prev_file_name = file_name
 
         if fh != None:
-            # to let emulator know all was fine
-            fh.write('\tmov ax,#$a5ee\n')
-            fh.write('\tmov si,ax\n')
-            fh.write('\thlt\n')
+            emit_tail(fh)
 
             fh.close()
 

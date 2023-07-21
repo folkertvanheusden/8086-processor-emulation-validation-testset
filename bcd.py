@@ -1,63 +1,84 @@
 #! /usr/bin/python3
 
+from flags import flags_add_sub_cp
 from helpers import emit_header, emit_tail
 import sys
 
 p = sys.argv[1]
 
-fh = open(p + '/' + 'bcd.asm', 'w')
+fh = None
+n = 0
 
-emit_header(fh)
+for carry in range(0, 2):
+    for al in range(0, 0x100):
+        if (al & 0x0f) > 9 or (al & 0xf0) > 0x90:
+            continue
 
-# tests taken from the Intel documentation
+        for bl in range(0, 0x100):
+            if (bl & 0x0f) > 9 or (bl & 0xf0) > 0x90:
+                continue
 
-# ADD AL, BL Before: AL=79H BL=35H EFLAGS(OSZAPC)=XXXXXX
-# After: AL=AEH BL=35H EFLAGS(0SZAPC)=110000
-# DAA Before: AL=AEH BL=35H EFLAGS(OSZAPC)=110000
-# After: AL=14H BL=35H EFLAGS(0SZAPC)=X00111
+            if fh == None:
+                fh = open(p + '/' + f'bcd_{n}.asm', 'w')
 
-fh.write(
-'''
-; daa test 1
-    mov al,#$79
-    mov bl,#$35
-    add al,bl
-    pushf
+                emit_header(fh)
 
-    ; check result of addition
-    cmp al,#$ae
-    beq test_1_1_ok
-    hlt
-test_1_1_ok:
+            label = f'test_{al:02x}_{bl:02x}_'
 
-    ; check flags of addition
-    pop cx
-    and cx,#$fff
-    cmp cx,#$882
-    beq test_1_2_ok
-    hlt
-test_1_2_ok:
+            (temp_al, temp_flags) = flags_add_sub_cp(False, True if carry else False, al, bl)
 
-    ;
-    daa
+            flag_c = True if temp_flags & 1 else False
+            flag_a = True if temp_flags & 16 else False
 
-    ; check flags of daa
-    pushf
-    pop cx
-    and cx,#$fff
-    cmp cx,#$17
-    beq test_1_3_ok
-    hlt
-test_1_3_ok:
+            if (temp_al & 0x0f) > 9 or flag_a:
+                temp_al += 6
+                flag_c |= flag_a
+            else:
+                flag_a = False
 
-    cmp al,#$14
-    beq test_1_4_ok
-    hlt
-test_1_4_ok:
+            if (temp_al & 0xf0) > 0x90 or flag_c:
+                temp_al += 0x60
+                flag_c = True
+            else:
+                flag_c = False
 
-finish:
-''')
+            result_value = temp_al & 0xff
 
-emit_tail(fh)
+            result_flags = (temp_flags & ~(1 | 16)) | (flag_c << 0) | (flag_a << 4)
 
-fh.close()
+            fh.write(f'\tmov ax,#${temp_flags:02x}\n')
+            fh.write(f'\tpush ax\n')
+            fh.write(f'\tpopf\n')
+
+            fh.write(f'\tmov al,#${al:02x}\n')
+            fh.write(f'\tmov bl,#${bl:02x}\n')
+            fh.write(f'\tadd al,bl\n')
+
+            fh.write(f'\tdaa\n')
+
+            fh.write(f'\tpushf\n')
+            fh.write(f'\tpop cx\n')
+            fh.write(f'\tand cx,#$fff\n')
+            fh.write(f'\tcmp cx,#${result_flags:02x}\n')
+            fh.write(f'\tjz {label}_3_ok\n')
+            fh.write(f'\thlt\n')
+            fh.write(f'\t{label}_3_ok:\n')
+
+            fh.write(f'\t; check result of daa\n')
+            fh.write(f'\tcmp al,#${result_value:02x}\n')
+            fh.write(f'\tjz {label}_4_ok\n')
+            fh.write(f'\thlt\n')
+            fh.write(f'\t{label}_4_ok:\n')
+
+            n += 1
+
+            if (n % 512) == 0:
+                emit_tail(fh)
+                fh.close()
+
+                fh = None
+
+if fh != None:
+    emit_tail(fh)
+
+    fh.close()

@@ -56,6 +56,8 @@ and 5 *are* checked. This inconsistency must (will) be fixed.
 
 run\_tests.py is a convenience script for testing the DotXT emulator.
 
+BCD testing (bcd.py) is not finished.
+
 
 license
 -------

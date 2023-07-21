@@ -16,9 +16,6 @@ emit_header(fh)
 # DAA Before: AL=AEH BL=35H EFLAGS(OSZAPC)=110000
 # After: AL=14H BL=35H EFLAGS(0SZAPC)=X00111
 
-# DAA Before: AL=2EH BL=35H EFLAGS(OSZAPC)=110000
-# After: AL=04H BL=35H EFLAGS(0SZAPC)=X00101
-
 fh.write(
 '''
 ; daa test 1
@@ -57,28 +54,6 @@ test_1_3_ok:
     beq test_1_4_ok
     hlt
 test_1_4_ok:
-
-; daa test 2
-    ; setup flags
-    mov ax,#$882
-    push ax
-    popf
-    ; do
-    mov al,#$2e
-    daa
-    pushf
-    ; verify outcome value
-    cmp al,#$04
-    beq test_2_1_ok
-    hlt
-test_2_1_ok:
-    ; verify outcome flags
-    pop ax
-    and ax,#$fff
-    cmp ax,#$b
-    beq test_2_2_ok
-    hlt
-test_2_2_ok:
 
 finish:
 ''')

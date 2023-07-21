@@ -61,7 +61,7 @@ test_1_4_ok:
 ; daa test 2
     ; setup flags
     mov ax,#$882
-    push ax;
+    push ax
     popf
     ; do
     mov al,#$2e

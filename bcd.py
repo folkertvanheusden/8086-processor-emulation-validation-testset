@@ -5,7 +5,7 @@ import sys
 
 p = sys.argv[1]
 
-fh = open(p + '/' + 'daa.asm', 'w')
+fh = open(p + '/' + 'bcd.asm', 'w')
 
 emit_header(fh)
 
@@ -48,7 +48,7 @@ test_1_2_ok:
     pushf
     pop cx
     and cx,#$fff
-    cmp cx,#$f
+    cmp cx,#$17
     beq test_1_3_ok
     hlt
 test_1_3_ok:

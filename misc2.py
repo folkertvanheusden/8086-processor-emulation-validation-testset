@@ -20,9 +20,13 @@ test_019:
     org $2000
 test_019_continue0:
     mov ax,#$300
+    jmp mov_cs
+mov_cs:
     mov cs,ax
+    hlt
     org $3000
 test_019_continue1:
+    nop
     nop
     nop
     nop

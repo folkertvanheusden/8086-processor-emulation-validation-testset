@@ -1,22 +1,13 @@
 #! /usr/bin/python3
 
+from helpers import emit_header, emit_tail
 import sys
 
 p = sys.argv[1]
 
 fh = open(p + '/' + 'jmp_call_ret.asm', 'w')
 
-fh.write('\torg $800\n')
-fh.write('\n')
-
-fh.write('\txor ax,ax\n')
-fh.write('\tmov si,ax\n')  # set si to 'still running'
-fh.write('\n')
-fh.write('LOC 0\n')
-fh.write('\tmov ss,ax\n')  # set stack segment to 0
-fh.write('\tmov ax,#$800\n')  # set stack pointer
-fh.write('\tmov sp,ax\n')  # set stack pointer
-
+emit_header(fh)
 
 fh.write(
 '''
@@ -79,7 +70,6 @@ test_005_ok:
 finish:
 ''')
 
-fh.write('\tmov ax,#$a5ee\n')
-fh.write('\tmov si,ax\n')  # set si to 'finished successfully'
-fh.write('\thlt\n')
+emit_tail(fh)
+
 fh.close()

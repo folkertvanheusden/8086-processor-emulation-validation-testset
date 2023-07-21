@@ -33,6 +33,8 @@ how to run
 ----------
 After you've assembled a .bin-file, load it into memory at 0x0000 and
 start running at 0x0800. They should all finish in a fraction of a second.
+Assembling should be done with 'as86 -0' to make sure it uses 8086
+instructions.
 
 When successfully executed, 0xa5ee in the SI register and then HLT is
 invoked. A failed test only runs HLT at some point.

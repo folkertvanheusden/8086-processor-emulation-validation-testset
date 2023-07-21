@@ -27,16 +27,24 @@ for carry in range(0, 2):
 
             (temp_al, temp_flags) = flags_add_sub_cp(False, True if carry else False, al, bl)
 
+            old_temp_al = temp_al
+
             flag_c = True if temp_flags & 1 else False
             flag_a = True if temp_flags & 16 else False
+            old_flag_c = flag_c
+            old_flag_a = flag_a
 
             if (temp_al & 0x0f) > 9 or flag_a:
+                new_flag_a = (temp_al & 0x0f) + 6 > 9
                 temp_al += 6
-                flag_c |= flag_a
+
+                flag_c = old_flag_c or new_flag_a
+
+                flag_a = True
             else:
                 flag_a = False
 
-            if (temp_al & 0xf0) > 0x90 or flag_c:
+            if (old_temp_al & 0xf0) > 0x90 or old_flag_c:
                 temp_al += 0x60
                 flag_c = True
             else:

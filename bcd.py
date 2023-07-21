@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from flags import flags_add_sub_cp
+from flags import parity, flags_add_sub_cp
 from helpers import emit_header, emit_tail
 import sys
 
@@ -52,7 +52,16 @@ for carry in range(0, 2):
 
             result_value = temp_al & 0xff
 
-            result_flags = (temp_flags & ~(1 | 16)) | (flag_c << 0) | (flag_a << 4)
+            result_flags = (temp_flags & ~(1 | 4 | 16 | 64 | 128)) | (1 if flag_c else 0) | (16 if flag_a else 0)
+
+            if parity(result_value):
+                result_flags |= 4  # parity
+
+            if result_value == 0:
+                result_flags |= 64  # zero
+
+            if result_value & 128:
+                result_flags |= 128
 
             fh.write(f'\tmov ax,#${temp_flags:02x}\n')
             fh.write(f'\tpush ax\n')

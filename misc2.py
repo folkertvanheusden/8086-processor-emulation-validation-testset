@@ -19,10 +19,12 @@ test_019:
     hlt
     org $2000
 test_019_continue0:
-    mov ax,#$300
+    mov ax,#$100
     jmp mov_cs
 mov_cs:
     mov cs,ax
+    ; clear queue
+    jmp mov_cs
     hlt
     org $3000
 test_019_continue1:

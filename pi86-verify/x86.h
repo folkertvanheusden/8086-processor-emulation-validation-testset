@@ -1,5 +1,6 @@
-#ifndef X86_H
-#define X86_H
+#pragma once
+
+#include <vector>
 
 #define V20 	88
 #define V30 	86 
@@ -47,9 +48,16 @@ using namespace std;
 
 static bool Stop_Flag;
 
+typedef struct
+{
+	int address;
+	bool write;
+	uint8_t value;
+} history_t;
+
 
 void Reset();	
-void Start(int Processor, const char *logfile);
+std::vector<history_t> Start(int Processor);
 void Load_Bios(string Bios_file);
 //Memory
 void Write_Memory_Array(unsigned long long int Address, char code_for_8088[], int Length);
@@ -68,4 +76,3 @@ void Write_IO_Word(unsigned long long int Address, unsigned short int word_for_8
 
 void IRQ0();
 void IRQ1();
-#endif

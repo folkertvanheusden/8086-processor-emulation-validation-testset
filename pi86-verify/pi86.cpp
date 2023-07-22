@@ -12,7 +12,20 @@ int main(int argc, char* argv[])
 	///////////////////////////////////////////////////////////////////
 	//Change this Start(V30); 8086 or Start(V20); 8088 to set the processor
 	///////////////////////////////////////////////////////////////////
-	Start(V20, argc == 3 ? argv[2] : nullptr);
+	auto history = Start(V20);
+
+	if (argc == 3) {
+		FILE *fh = fopen(argv[2], "w");
+
+		for(auto & record : history) {
+			if (record.write)
+				fprintf(fh, "WRITE %04x %02x\n", record.address, record.value);
+			else
+				fprintf(fh, "READ %04x %02x\n", record.address, record.value);
+		}
+
+		fclose(fh);
+	}
 	
 	return 0;
 }

@@ -15,7 +15,7 @@ function function_generate() {
 	parallel assemble_one ::: test/*.asm
 }
 
-function_generate
+#function_generate
 
 echo Compiling validation tool...
 cd pi86-verify
@@ -25,9 +25,9 @@ mkdir build
 echo Running test set...
 for i in ../test/*.bin
 do
-	echo -n "$i - "
-
 	BASE=`echo $i | sed -e 's/.bin$//g'`
+
+	echo -n "$i - "
 
 	./build/verify-with-pi86 $i ${BASE}.log
 done

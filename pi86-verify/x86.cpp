@@ -253,9 +253,12 @@ void Setup()
 	pinMode (A18, INPUT);
 	pinMode (A19, INPUT);
 }
+
 //System Bus decoder
-void Start_System_Bus(int Processor, const char *logfile)
+auto Start_System_Bus(int Processor)
 {
+	std::vector<history_t> history;
+
 	char Control_Bus;
 	int Address;
 	char Memory_IO_Bank;
@@ -279,13 +282,13 @@ void Start_System_Bus(int Processor, const char *logfile)
 						Write_To_Data_Port_0_7(RAM[Address]);
 						CLK(); CLK();
 						Data_Bus_Direction_8088_IN();
-						if (logfile) { FILE *fh = fopen(logfile, "a+"); if (fh) { fprintf(fh, "READ %04x %02x\n", Address, RAM[Address]); fclose(fh); } }
+						history.push_back({ Address, false, RAM[Address] });
 						break;
 						//Write Mem
 					case 0x05:
 						RAM[Address] = Read_From_Data_Port_0_7();
-						if (logfile) { FILE *fh = fopen(logfile, "a+"); if (fh) { fprintf(fh, "WRITE %04x %02x\n", Address, RAM[Address]); fclose(fh); } }
 						CLK(); CLK();
+						history.push_back({ Address, true, RAM[Address] });
 						break;
 						//Read IO
 					case 0x06:
@@ -299,7 +302,7 @@ void Start_System_Bus(int Processor, const char *logfile)
 						IO[Address] = Read_From_Data_Port_0_7();
 						if (Address == 0x0080 && IO[Address] == 255) {
 							printf("Success\n");
-							exit(0);
+							goto return_history;
 						}
 
 						CLK(); CLK();
@@ -350,7 +353,7 @@ void Start_System_Bus(int Processor, const char *logfile)
 				if (now - p_ts > 500)
 				{
 					printf("Fail at %04x\n", Address);
-					exit(1);
+					goto return_history;
 				}
 			}
 		}
@@ -483,6 +486,9 @@ void Start_System_Bus(int Processor, const char *logfile)
 			}     
 		}
 	} 
+
+return_history:
+	return history;
 }
 void Write_Memory_Array(unsigned long long int Address, char code_for_8088[], int Length)
 {  
@@ -552,14 +558,15 @@ void Reset()
 	CLK(); CLK(); CLK(); CLK();
 	digitalWrite (PIN_RESET, LOW);
 }
-void Start(int Processor, const char *logfile)
+
+std::vector<history_t> Start(int Processor)
 {
 	//Sets up Ports 
 	Setup();	
 	//Resets the x86
 	Reset();
 	//Starts the x86 system bus
-	Start_System_Bus(Processor, logfile);
+	return Start_System_Bus(Processor);
 }
 
 void Load_Bios(string test)

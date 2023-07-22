@@ -48,7 +48,7 @@ test_001_ok1:
     mov ax,#test_001_source
     sub bx,ax
     cmp bx,#6
-    beq test_001_ok2
+    jz test_001_ok2
     hlt
 
 test_001_ok2:
@@ -56,7 +56,7 @@ test_001_ok2:
     mov ax,#test_001_dest
     sub bx,ax
     cmp bx,#6
-    beq test_001_ok3
+    jz test_001_ok3
     hlt
 
 test_001_ok3:
@@ -92,19 +92,19 @@ test_002_do:
     movsw
 
     cmp si,ax
-    beq test_002_si_ok
+    jz test_002_si_ok
     hlt
 
 test_002_si_ok:
     mov ax,#test_002_do
     cmp di,ax
-    beq test_002_di_ok
+    jz test_002_di_ok
     hlt
 
 test_002_di_ok:
     mov ax,[test_002_dest + 6]
     cmp [test_002_source + 6],ax
-    beq test_002_xfer_ok
+    jz test_002_xfer_ok
     hlt
 
 test_002_xfer_ok:
@@ -119,12 +119,12 @@ test_003_go:
     mov si,ax
     lodsw
     cmp ax,#$7766
-    beq test_003_ok1
+    jz test_003_ok1
     hlt
 test_003_ok1:
     mov ax,si
     cmp ax,#test_003_go
-    beq test_003_ok2
+    jz test_003_ok2
     hlt
 test_003_ok2:
 
@@ -133,7 +133,7 @@ test_004:
     mov ax,#$9911
     not ax
     cmp ax,#$66ee
-    beq test_004_ok
+    jz test_004_ok
     hlt
 test_004_ok:
     jmp test_005_go
@@ -145,7 +145,7 @@ test_005_go:
     not [test_005]
     mov ax,[test_005]
     cmp ax,#$ee66
-    beq test_005_ok
+    jz test_005_ok
     hlt
 test_005_ok:
 
@@ -157,11 +157,11 @@ test_006:
     popf
     lahf
     cmp ah,#$d7
-    beq test_006_ok1
+    jz test_006_ok1
     hlt
 test_006_ok1:
     cmp al,#$ff
-    beq test_006_ok2
+    jz test_006_ok2
     hlt
 test_006_ok2:
     mov ax,#$0000
@@ -169,11 +169,11 @@ test_006_ok2:
     popf
     lahf
     cmp ah,#$02
-    beq test_006_ok3
+    jz test_006_ok3
     hlt
 test_006_ok3:
     cmp al,#$00
-    beq test_006_ok4
+    jz test_006_ok4
     hlt
 test_006_ok4:
 
@@ -188,7 +188,7 @@ test_007:
     pop ax
     and ax,#$0fff
     cmp al,#$d7
-    beq test_007_ok1
+    jz test_007_ok1
     hlt
 test_007_ok1:
 
@@ -205,7 +205,7 @@ test_008:
     and ax,#$0fff
     and ax,#$200
     cmp ax,#512
-    beq test_008_ok1
+    jz test_008_ok1
     hlt
 test_008_ok1:
     ; disable interrupts
@@ -214,7 +214,7 @@ test_008_ok1:
     pop bx
     and bx,#$200
     cmp bx,#0
-    beq test_008_ok2
+    jz test_008_ok2
     hlt
 test_008_ok2:
     jmp test_009_go
@@ -234,7 +234,7 @@ test_009_go:
 test_009_ok1:
     add di,#2
     cmp di,#test_009
-    beq test_009_ok2
+    jz test_009_ok2
     hlt
 test_009_ok2:
 
@@ -252,7 +252,7 @@ test_00a_go:
 test_00a_ok1:
     inc di
     cmp di,#test_00a
-    beq test_00a_ok2
+    jz test_00a_ok2
     hlt
 test_00a_ok2:
     jmp test_00b_go
@@ -275,7 +275,7 @@ test_00b_go:
     mov al,#$05
     xlatb
     cmp al,#$0f
-    beq test_00b_ok1
+    jz test_00b_ok1
     hlt
 test_00b_ok1:
 
@@ -290,11 +290,11 @@ test_00c_loop:
     cmp bx,#$123
     loopnz test_00c_loop
     cmp cx,#$133
-    beq test_00c_ok1
+    jz test_00c_ok1
     hlt
 test_00c_ok1:
     cmp dx,#$123
-    beq test_00c_ok2
+    jz test_00c_ok2
     hlt
 test_00c_ok2:
 
@@ -309,11 +309,11 @@ test_00d_loop:
     cmp bx,dx
     loopz test_00d_loop
     cmp cx,#$0000
-    beq test_00d_ok1
+    jz test_00d_ok1
     hlt
 test_00d_ok1:
     cmp dx,#$09
-    beq test_00d_ok2
+    jz test_00d_ok2
     hlt
 test_00d_ok2:
 

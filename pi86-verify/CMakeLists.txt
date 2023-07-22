@@ -6,9 +6,10 @@ project(verify-with-pi86 VERSION 1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
 
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+add_compile_options(-Wall)
 
 add_executable(verify-with-pi86
 	pi86.cpp

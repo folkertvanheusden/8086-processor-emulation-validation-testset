@@ -64,3 +64,6 @@ license
 This testset is released in the public domain.
 
 (C) 2023 by Folkert van Heusden.
+
+The code underneath pi86-verify/ is (partially) (C) homebrew8088 project.
+They had it licensed under GPL v3.0.

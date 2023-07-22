@@ -15,7 +15,7 @@ function function_generate() {
 	parallel assemble_one ::: test/*.asm
 }
 
-#function_generate
+function_generate
 
 echo Compiling validation tool...
 cd pi86-verify

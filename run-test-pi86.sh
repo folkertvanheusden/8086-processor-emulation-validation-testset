@@ -23,6 +23,7 @@ mkdir build
 (cd build && cmake .. && make -j)
 
 echo Running test set...
+rm failed.txt
 for i in ../test/*.bin
 do
 	BASE=`echo $i | sed -e 's/.bin$//g'`
@@ -30,4 +31,8 @@ do
 	echo -n "$i - "
 
 	./build/verify-with-pi86 $i ${BASE}.log
+
+	if [ $? -ne 0 ] ; then
+		echo $i ${BASE}.log >> failed.txt
+	fi
 done

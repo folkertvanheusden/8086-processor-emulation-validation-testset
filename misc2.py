@@ -23,8 +23,6 @@ test_019_continue0:
     jmp mov_cs
 mov_cs:
     mov cs,ax
-    ; clear queue
-    jmp mov_cs
     hlt
     org $3000
 test_019_continue1:
@@ -35,6 +33,8 @@ test_019_continue1:
     nop
     nop
     nop
+    jmp test_019_continue2
+test_019_continue2:
     nop
     ;
     nop

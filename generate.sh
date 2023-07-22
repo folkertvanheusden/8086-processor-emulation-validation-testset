@@ -15,7 +15,6 @@ python3 jmp_call_ret.py test
 ./jmp_call_ret_far2.sh test
 python3 misc.py test
 python3 misc2.py test
-python3 misc2b.py test
 python3 misc3.py test
 python3 mov.py test
 python3 neg.py test

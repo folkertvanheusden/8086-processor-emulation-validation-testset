@@ -7,18 +7,22 @@ function assemble_one() {
 }
 
 function function_generate() {
+	echo Generate test set assembly code...
 	./generate.sh
 
+	echo Translating assembly code to binary...
 	export -f assemble_one
 	parallel assemble_one ::: test/*.asm
 }
 
 function_generate
 
+echo Compiling validation tool...
 cd pi86-verify
 mkdir build
 (cd build && cmake .. && make -j)
 
+echo Running test set...
 for i in ../test/*.bin
 do
 	echo -n "$i - "

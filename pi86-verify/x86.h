@@ -49,7 +49,7 @@ static bool Stop_Flag;
 
 
 void Reset();	
-void Start(int Processor);
+void Start(int Processor, bool verbose);
 void Load_Bios(string Bios_file);
 //Memory
 void Write_Memory_Array(unsigned long long int Address, char code_for_8088[], int Length);

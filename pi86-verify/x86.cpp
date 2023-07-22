@@ -254,7 +254,7 @@ void Setup()
 	pinMode (A19, INPUT);
 }
 //System Bus decoder
-void Start_System_Bus(int Processor, bool verbose)
+void Start_System_Bus(int Processor, const char *logfile)
 {
 	char Control_Bus;
 	int Address;
@@ -279,12 +279,12 @@ void Start_System_Bus(int Processor, bool verbose)
 						Write_To_Data_Port_0_7(RAM[Address]);
 						CLK(); CLK();
 						Data_Bus_Direction_8088_IN();
-						if (verbose) printf("READ %04x %02x\n", Address, RAM[Address]);
+						if (logfile) { FILE *fh = fopen(logfile, "a+"); if (fh) { fprintf(fh, "READ %04x %02x\n", Address, RAM[Address]); fclose(fh); } }
 						break;
 						//Write Mem
 					case 0x05:
 						RAM[Address] = Read_From_Data_Port_0_7();
-						if (verbose) printf("WRITE %04x %02x\n", Address, RAM[Address]);
+						if (logfile) { FILE *fh = fopen(logfile, "a+"); if (fh) { fprintf(fh, "WRITE %04x %02x\n", Address, RAM[Address]); fclose(fh); } }
 						CLK(); CLK();
 						break;
 						//Read IO
@@ -552,14 +552,14 @@ void Reset()
 	CLK(); CLK(); CLK(); CLK();
 	digitalWrite (PIN_RESET, LOW);
 }
-void Start(int Processor, bool verbose)
+void Start(int Processor, const char *logfile)
 {
 	//Sets up Ports 
 	Setup();	
 	//Resets the x86
 	Reset();
 	//Starts the x86 system bus
-	Start_System_Bus(Processor, verbose);
+	Start_System_Bus(Processor, logfile);
 }
 
 void Load_Bios(string test)

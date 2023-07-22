@@ -142,7 +142,7 @@ test_005:
     dw $1199
 test_005_go:
     mov si,#$0005
-    not [test_005]
+    not word [test_005]
     mov ax,[test_005]
     cmp ax,#$ee66
     jz test_005_ok

@@ -1,6 +1,6 @@
 pi86.* and x86.* are from https://github.com/homebrew8088/pi86
 They've been adapted to directly run the .bin-files from the testset.
-They were originally licensed as GPL.
+They were originally licensed as GPL v3.0.
 
 
 -- Folkert van Heusden <mail@vanheusden.com>

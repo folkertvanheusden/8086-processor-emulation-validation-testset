@@ -40,6 +40,17 @@ When successfully executed, 0xa5ee in the SI register and then HLT is
 invoked. A failed test only runs HLT at some point.
 
 
+test the test set
+-----------------
+Using the PI86 hardware (see pi86-verify/LICENSE) one can check the test
+set against real hardware.
+To do so, run:
+
+	run-test-pi86.sh
+
+Note that this requires 'bash' and 'GNU Parallel'.
+
+
 bugs
 ----
 If you find any bugs or any other problems with this test-set, please

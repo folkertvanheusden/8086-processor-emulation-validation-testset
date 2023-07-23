@@ -37,6 +37,10 @@ do
 	fi
 done
 
-./build/verify-with-pi86 ../jmp_call_ret_far1.bin ../jmp_call_ret_far1.log
+if [ -e ../jmp_call_ret_far1.bin ] ; then
+	echo 'jmp_call_ret_far1' `./build/verify-with-pi86 ../jmp_call_ret_far1.bin ../jmp_call_ret_far1.log`
+fi
 
-./build/verify-with-pi86 ../jmp_call_ret_far2.bin ../jmp_call_ret_far2.log
+if [ -e ../jmp_call_ret_far2.bin ] ; then
+	echo 'jmp_call_ret_far2' `./build/verify-with-pi86 ../jmp_call_ret_far2.bin ../jmp_call_ret_far2.log`
+fi

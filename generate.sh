@@ -7,7 +7,7 @@ python3 adc16_add16_sbb16_sub16.py test
 python3 cbw_cwd.py test
 python3 cmp.py test
 python3 cmp16.py test
-# python3 bcd.py test
+python3 bcd.py test
 python3 inc_dec.py test
 python3 inc_dec16.py test
 python3 jmp_call_ret.py test

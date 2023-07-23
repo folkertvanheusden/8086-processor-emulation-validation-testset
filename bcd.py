@@ -32,17 +32,22 @@ for carry in range(0, 2):
 
             temp_al = in_al
 
+
             if (in_al & 0x0f) > 9 or flag_a:
                 temp_al += 0x06
                 temp_al &= 0xff
 
                 flag_a = True
 
-            if in_al > 0x99 or flag_c:
+            # this configurable 'upper_nibble_check' comes from MartyPC
+            upper_nibble_check = 0x9f if half_carry else 0x99
+
+            if in_al > upper_nibble_check or flag_c:
                 temp_al += 0x60
                 temp_al &= 0xff
 
                 flag_c = True
+
 
             result_value = temp_al
 
@@ -71,6 +76,8 @@ for carry in range(0, 2):
 
             fh.write(f'\tdaa\n')
 
+            fh.write(f'\tpush ax\n')
+
             fh.write(f'\tpushf\n')
             fh.write(f'\tpop cx\n')
             # overflow flag is undefined
@@ -79,6 +86,13 @@ for carry in range(0, 2):
             fh.write(f'\tjz {label}_3_ok\n')
             fh.write(f'\thlt\n')
             fh.write(f'\t{label}_3_ok:\n')
+
+            fh.write(f'\t; check result of daa\n')
+            fh.write(f'\tpop ax\n')
+            fh.write(f'\tcmp al,#${result_value:02x}\n')
+            fh.write(f'\tjz {label}_4_ok\n')
+            fh.write(f'\thlt\n')
+            fh.write(f'\t{label}_4_ok:\n')
 
             n += 1
 

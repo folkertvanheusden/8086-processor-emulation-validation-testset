@@ -10,68 +10,64 @@ fh = None
 n = 0
 
 for carry in range(0, 2):
-    for al in range(0, 0x100):
-        if (al & 0x0f) > 9 or (al & 0xf0) > 0x90:
-            continue
-
-        for bl in range(0, 0x100):
-            if (bl & 0x0f) > 9 or (bl & 0xf0) > 0x90:
-                continue
-
+    for half_carry in range(0, 2):
+        for in_al in range(0, 0x100):
             if fh == None:
                 fh = open(p + '/' + f'bcd_{n}.asm', 'w')
 
                 emit_header(fh)
 
-            label = f'test_{al:02x}_{bl:02x}_'
+            label = f'test_{carry}_{half_carry}_{in_al:02x}_'
 
-            (temp_al, temp_flags) = flags_add_sub_cp(False, True if carry else False, al, bl)
+            flag_c = carry
+            flag_a = half_carry
 
-            old_temp_al = temp_al
+            before_flags = 2
+            
+            if flag_c:
+                before_flags |= 1
 
-            flag_c = True if temp_flags & 1 else False
-            flag_a = True if temp_flags & 16 else False
-            old_flag_c = flag_c
-            old_flag_a = flag_a
+            if flag_a:
+                before_flags |= 16
 
-            if (temp_al & 0x0f) > 9 or flag_a:
-                new_flag_a = (temp_al & 0x0f) + 6 > 9
-                temp_al += 6
+            temp_al = in_al
 
-                flag_c = old_flag_c or new_flag_a
+            if (in_al & 0x0f) > 9 or flag_a:
+                temp_al += 0x06
+                temp_al &= 0xff
 
                 flag_a = True
-            else:
-                flag_a = False
 
-            if (old_temp_al & 0xf0) > 0x90 or old_flag_c:
+            if in_al > 0x99 or flag_c:
                 temp_al += 0x60
+                temp_al &= 0xff
+
                 flag_c = True
-            else:
-                flag_c = False
 
-            result_value = temp_al & 0xff
+            result_value = temp_al
 
-            result_flags = (temp_flags & ~(1 | 4 | 16 | 64 | 128)) | (1 if flag_c else 0) | (16 if flag_a else 0)
+            result_flags = 2
 
-            # print(f"{result_value} {parity(result_value)} {result_flags:02x}|{temp_flags:02x}")
+            if flag_c:
+                result_flags |= 1  # carry
 
             if parity(result_value):
                 result_flags |= 4  # parity
+
+            if flag_a:
+                result_flags |= 16  # half carry
 
             if result_value == 0:
                 result_flags |= 64  # zero
 
             if result_value & 128:
-                result_flags |= 128
+                result_flags |= 128  # sign
 
-            fh.write(f'\tmov ax,#${temp_flags:02x}\n')
+            fh.write(f'\tmov ax,#${before_flags:04x}\n')
             fh.write(f'\tpush ax\n')
             fh.write(f'\tpopf\n')
 
-            fh.write(f'\tmov al,#${al:02x}\n')
-            fh.write(f'\tmov bl,#${bl:02x}\n')
-            fh.write(f'\tadd al,bl\n')
+            fh.write(f'\tmov al,#${in_al:02x}\n')
 
             fh.write(f'\tdaa\n')
 
@@ -83,12 +79,6 @@ for carry in range(0, 2):
             fh.write(f'\tjz {label}_3_ok\n')
             fh.write(f'\thlt\n')
             fh.write(f'\t{label}_3_ok:\n')
-
-            fh.write(f'\t; check result of daa\n')
-            fh.write(f'\tcmp al,#${result_value:02x}\n')
-            fh.write(f'\tjz {label}_4_ok\n')
-            fh.write(f'\thlt\n')
-            fh.write(f'\t{label}_4_ok:\n')
 
             n += 1
 

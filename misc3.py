@@ -11,6 +11,16 @@ emit_header(fh)
 
 fh.write(
 '''
+init:
+    mov ax,#intvec
+    mov word [4],ax
+    xor ax,ax
+    mov word [6],ax
+    jmp init_continue
+intvec:
+    iret
+init_continue:
+
 test_001:
     mov si,#$0001
     jmp test_001_do

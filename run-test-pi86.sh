@@ -36,3 +36,7 @@ do
 		echo $i ${BASE}.log >> ../failed.txt
 	fi
 done
+
+./build/verify-with-pi86 ../jmp_call_ret_far1.bin ../jmp_call_ret_far1.log
+
+./build/verify-with-pi86 ../jmp_call_ret_far2.bin ../jmp_call_ret_far2.log

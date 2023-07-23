@@ -75,7 +75,8 @@ for carry in range(0, 2):
 
             fh.write(f'\tpushf\n')
             fh.write(f'\tpop cx\n')
-            fh.write(f'\tand cx,#$fff\n')
+            # overflow flag is undefined
+            fh.write(f'\tand cx,#$7ff\n')
             fh.write(f'\tcmp cx,#${result_flags:02x}\n')
             fh.write(f'\tjz {label}_3_ok\n')
             fh.write(f'\thlt\n')

@@ -107,7 +107,10 @@ def emit_test(width, v1, shift, carry, instr):
 
     # verify flags
     fh.write(f'\tpop ax\n')
-    fh.write(f'\tand ax,#$0fff\n')
+    # note that the A-flag is also masked of here as it is undefined according
+    # to https://www.felixcloutier.com/x86/sal:sar:shl:shr and the OKI 80C88
+    # processor shows different behaviour
+    fh.write(f'\tand ax,#$0fef\n')
     if flags_mask != 0xffff:
         fh.write(f'\tand ax,#${flags_mask:04x}\n')
     fh.write(f'\tcmp ax,#${flags:04x}\n')

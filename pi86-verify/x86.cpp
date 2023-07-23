@@ -255,13 +255,13 @@ void Setup()
 }
 
 //System Bus decoder
-auto Start_System_Bus(int Processor)
+std::pair<std::vector<history_t>, bool> Start_System_Bus(int Processor)
 {
 	std::vector<history_t> history;
+	bool ok = false;
 
-	char Control_Bus;
-	int Address;
-	char Memory_IO_Bank;
+	int Address = 0;
+	char Memory_IO_Bank = 0;
 
 	if (Processor == 88)
 	{
@@ -302,6 +302,7 @@ auto Start_System_Bus(int Processor)
 						IO[Address] = Read_From_Data_Port_0_7();
 						if (Address == 0x0080 && IO[Address] == 255) {
 							printf("Success\n");
+							ok = true;
 							goto return_history;
 						}
 
@@ -488,7 +489,7 @@ auto Start_System_Bus(int Processor)
 	} 
 
 return_history:
-	return history;
+	return { history, ok };
 }
 void Write_Memory_Array(unsigned long long int Address, char code_for_8088[], int Length)
 {  
@@ -559,7 +560,7 @@ void Reset()
 	digitalWrite (PIN_RESET, LOW);
 }
 
-std::vector<history_t> Start(int Processor)
+std::pair<std::vector<history_t>, bool> Start(int Processor)
 {
 	//Sets up Ports 
 	Setup();	

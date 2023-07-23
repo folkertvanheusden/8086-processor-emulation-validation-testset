@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	if (argc == 3) {
 		FILE *fh = fopen(argv[2], "w");
 
-		for(auto & record : history) {
+		for(auto & record : history.first) {
 			if (record.write)
 				fprintf(fh, "WRITE %04x %02x\n", record.address, record.value);
 			else
@@ -27,6 +27,5 @@ int main(int argc, char* argv[])
 		fclose(fh);
 	}
 	
-	return 0;
+	return history.second ? 0 : 1;
 }
-

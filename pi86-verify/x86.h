@@ -46,8 +46,6 @@
 
 using namespace std;
 
-static bool Stop_Flag;
-
 typedef struct
 {
 	int address;
@@ -57,7 +55,7 @@ typedef struct
 
 
 void Reset();	
-std::vector<history_t> Start(int Processor);
+std::pair<std::vector<history_t>, bool> Start(int Processor);
 void Load_Bios(string Bios_file);
 //Memory
 void Write_Memory_Array(unsigned long long int Address, char code_for_8088[], int Length);

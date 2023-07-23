@@ -54,6 +54,8 @@ for carry in range(0, 2):
 
             result_flags = (temp_flags & ~(1 | 4 | 16 | 64 | 128)) | (1 if flag_c else 0) | (16 if flag_a else 0)
 
+            # print(f"{result_value} {parity(result_value)} {result_flags:02x}|{temp_flags:02x}")
+
             if parity(result_value):
                 result_flags |= 4  # parity
 
@@ -77,7 +79,7 @@ for carry in range(0, 2):
             fh.write(f'\tpop cx\n')
             # overflow flag is undefined
             fh.write(f'\tand cx,#$7ff\n')
-            fh.write(f'\tcmp cx,#${result_flags:02x}\n')
+            fh.write(f'\tcmp cx,#${result_flags:04x}\n')
             fh.write(f'\tjz {label}_3_ok\n')
             fh.write(f'\thlt\n')
             fh.write(f'\t{label}_3_ok:\n')

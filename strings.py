@@ -35,7 +35,6 @@ def header():
         fh.write('\tcld\n')
         fh.write('\tmov di,#from_start\n')
         fh.write('\tmov cx,#(from_end - from_start)\n')
-        fh.write('\tmov al,#$ee\n')
         fh.write('\trep\n')
         fh.write('\tstosb\n')
         fh.write('\ttest cx,#$0\n')
@@ -57,6 +56,7 @@ def header():
         fh.write('go:\n')
         fh.write('\tcld\n')
 
+# JCXZ and (no-)others
 def emit_test(cx, taken):
     global fh
     global n_tests
@@ -122,6 +122,7 @@ header()
 
 # STOSB
 label = 'stosb'
+fh.write('\tmov al,#$ee\n')
 fh.write(f'\tcall fill_buffers\n')
 
 fh.write('\tmov di,#from_start\n')
@@ -158,6 +159,7 @@ fh.write(f'to{label}_ok_end:\n')
 
 # MOVSB
 label = 'movsb'
+fh.write('\tmov al,#$99\n')
 fh.write(f'\tcall fill_buffers\n')
 fh.write('\tmov si,#from_start\n')
 fh.write('\tmov di,#to_start\n')
@@ -168,7 +170,7 @@ fh.write('\tmov di,#to_start\n')
 fh.write('\tmov cx,#(to_end - to_start)\n')
 fh.write(f'{label}_loop2:\n')
 fh.write('\tmovb al,[di]\n')
-fh.write('\tcmp al,#$ee\n')
+fh.write('\tcmp al,#$99\n')
 fh.write(f'\tjne {label}_fail2\n')
 fh.write(f'\tloop {label}_loop2\n')
 fh.write(f'\tjmp {label}_oksofar2\n')
@@ -179,6 +181,44 @@ fh.write('\ttest cx,#$0\n')
 fh.write(f'\tjz {label}_ok_end2\n')
 fh.write('\thlt\n')
 fh.write(f'{label}_ok_end2:\n')
+
+# MOVSB reverse order
+label = 'movsb'
+fh.write('\tmov al,#$67\n')
+fh.write(f'\tcall fill_buffers\n')
+
+fh.write('\tmov ax,#from_end\n')
+fh.write('\tsub ax,#1\n')
+fh.write('\tmov si,ax\n')
+
+fh.write('\tmov ax,#to_end\n')
+fh.write('\tdec ax\n')
+fh.write('\tmov di,ax\n')
+
+fh.write('\tmov cx,#(from_end - from_start)\n')
+
+fh.write(f'\tstd\n')
+
+fh.write('\trep\n')
+fh.write('\tmovsb\n')
+
+fh.write(f'\tcld\n')
+
+fh.write('\tmov di,#to_end\n')
+fh.write('\tmov cx,#(to_end - to_start)\n')
+fh.write(f'{label}_loop2b:\n')
+fh.write('\tmovb al,[di]\n')  # TODO: replace by cmpsb loop
+fh.write('\tcmp al,#$67\n')
+fh.write(f'\tjne {label}_fail2b\n')
+fh.write(f'\tloop {label}_loop2b\n')
+fh.write(f'\tjmp {label}_oksofar2b\n')
+fh.write(f'{label}_fail2b:\n')
+fh.write('\thlt\n')
+fh.write(f'{label}_oksofar2b:\n')
+fh.write('\ttest cx,#$0\n')
+fh.write(f'\tjz {label}_ok_end2b\n')
+fh.write('\thlt\n')
+fh.write(f'{label}_ok_end2b:\n')
 
 # LODSB (or any other) starting with CX==0
 fh.write('''

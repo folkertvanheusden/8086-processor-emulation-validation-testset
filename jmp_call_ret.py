@@ -63,7 +63,7 @@ test_005_sub:
     ret 6
 test_005_cont:
     cmp ax,sp
-    beq test_005_ok
+    jz test_005_ok
     hlt
 test_005_ok:
 

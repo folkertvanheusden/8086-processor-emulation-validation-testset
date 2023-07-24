@@ -259,7 +259,7 @@ test_00d:
     pop ax
     and ax,#$1
     cmp ax,#$1
-    beq test_00d_1
+    jz test_00d_1
     hlt
 test_00d_1:
     ; invert
@@ -269,7 +269,7 @@ test_00d_1:
     pop ax
     and ax,#$1
     cmp ax,#$0
-    beq test_00d_2
+    jz test_00d_2
     hlt
 test_00d_2:
     ; set & reset
@@ -279,7 +279,7 @@ test_00d_2:
     pop ax
     and ax,#$1
     cmp ax,#$0
-    beq test_00d_3
+    jz test_00d_3
     hlt
 test_00d_3:
     clc
@@ -385,7 +385,7 @@ test_013:
     mov bp,ax
     mov bx,bp
     cmp bx,#$1234
-    beq test_013_ok
+    jz test_013_ok
     hlt
 test_013_ok:
 
@@ -399,15 +399,15 @@ test_014:
     mov dh,#$34
     mov bh,#$56
     cmp cx,#$1200
-    beq test_014_1_ok
+    jz test_014_1_ok
     hlt
 test_014_1_ok:
     cmp dx,#$3400
-    beq test_014_2_ok
+    jz test_014_2_ok
     hlt
 test_014_2_ok:
     cmp bx,#$5600
-    beq test_014_3_ok
+    jz test_014_3_ok
     hlt
 test_014_3_ok:
 
@@ -417,15 +417,15 @@ test_015:
     mov cx,#$8e00
     mov dx,#$ce00
     cmp ch,#$8e
-    beq test_015_1_ok
+    jz test_015_1_ok
     hlt
 test_015_1_ok:
     cmp dh,#$ce
-    beq test_015_2_ok
+    jz test_015_2_ok
     hlt
 test_015_2_ok:
     cmp bh,#$ae
-    beq test_015_3_ok
+    jz test_015_3_ok
     hlt
 test_015_3_ok:
 
@@ -433,7 +433,7 @@ test_016:
     mov si,#$0016
     mov ax,cs
     cmp ax,#$0000
-    beq test_016_ok
+    jz test_016_ok
     hlt
 test_016_ok:
 
@@ -441,7 +441,7 @@ test_017:
     mov si,#$0017
     mov ax,ss
     cmp ax,#$0000
-    beq test_017_ok
+    jz test_017_ok
     hlt
 test_017_ok:
 
@@ -459,7 +459,7 @@ test_018:
     dseg
     mov al,[si]
     cmp ax,#$5512
-    beq test_018_ok
+    jz test_018_ok
     hlt
 test_018_ok:
     xor ax,ax

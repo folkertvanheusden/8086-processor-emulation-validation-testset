@@ -273,7 +273,7 @@ test_015_go:
     mov bp,ax
     mov ax,[bp + di]
     cmp ax,#$a5e5
-    beq test_015_ok
+    jz test_015_ok
     hlt
 test_015_ok:
     jmp test_016_go
@@ -285,7 +285,7 @@ test_016_go:
     mov ax,#$ff00
     mov al,[test_016]
     cmp ax,#$ff32
-    beq test_016_ok
+    jz test_016_ok
     hlt
 test_016_ok:
  
@@ -297,7 +297,7 @@ test_017_go:
     mov [test_017],al
     mov ax,#$13ff
     cmp ax,[test_017]
-    beq test_017_ok
+    jz test_017_ok
     hlt
 test_017_ok:
  
@@ -305,14 +305,14 @@ test_018:
     mov si,#$0018
     mov ax,#$ff12
     cmp ax,#$ff12
-    beq test_018_ok1
+    jz test_018_ok1
     hlt
 test_018_ok1:
     xor ax,ax
     mov bx,ax
     mov bl,#$12
     cmp bx,#$12
-    beq test_018_ok2
+    jz test_018_ok2
     hlt
 test_018_ok2:
     jmp test_019_go
@@ -339,7 +339,7 @@ test_019_go:
     mov bp,ax
     mov ax,[bp + si]
     cmp ax,#$1a00
-    beq test_019_ok
+    jz test_019_ok
     hlt
 test_019_ok:
     jmp test_01a_go
@@ -358,12 +358,12 @@ test_01a_go:
     ; next statement is for debugging
     mov bx,[test_01a]
     cmp [test_01a],#$8382
-    beq test_01a_ok1
+    jz test_01a_ok1
     hlt
 test_01a_ok1:
     sub di,#2
     cmp di,#test_01a
-    beq test_01a_ok2
+    jz test_01a_ok2
     hlt
 test_01a_ok2:
 

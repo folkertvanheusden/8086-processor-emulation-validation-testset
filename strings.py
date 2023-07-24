@@ -189,17 +189,17 @@ fh.write('''
     rep
     lodsb
     cmp cx,#$0000
-    beq cx0_rep_ok1
+    jz cx0_rep_ok1
     hlt
 cx0_rep_ok1:
     mov bx,si
     cmp bx,#$1000
-    beq cx0_rep_ok2
+    jz cx0_rep_ok2
     hlt
 cx0_rep_ok2:
     mov bx,di
     cmp bx,#$1000
-    beq cx0_rep_ok3
+    jz cx0_rep_ok3
     hlt
 cx0_rep_ok3:
 ''')

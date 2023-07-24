@@ -69,7 +69,7 @@ fh.write('\tpush ax\n')
 fh.write('\tpop [store_field]\n')
 fh.write('\tmov ax,[store_field]\n')
 fh.write('\tcmp ax,#$aa33\n')
-fh.write('\tbeq test_ok\n')
+fh.write('\tjz test_ok\n')
 fh.write('\thlt\n')
 fh.write('test_ok:\n')
 
@@ -83,7 +83,7 @@ fh.write('''
     mov ax,ds
     mov ds,cx
     cmp ax,#$123
-    beq ds_test_1
+    jz ds_test_1
     hlt
 ds_test_1:
 ''')

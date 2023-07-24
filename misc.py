@@ -515,14 +515,23 @@ test_01b:
     dw $1234
 test_01b_go:
     mov si,#$001b
+
+    ; NOT offset
     mov ax,#$0005
+    ; ds is shifted 4 and then added so effectively this is an offset of $20
     mov ds,ax
-    mov ax,#test_01b
-    mov bp,ax
+
     xor ax,ax
     not [test_01b]
     ; ax is 0 here
     mov ds,ax
+
+    ; CMP offset
+    mov ax,#test_01b
+    ; si = $1b here; $1b+5 = $20
+    add ax,#$05
+    mov bp,ax
+
     cmp [bp + si],#$EDCB
     jz test_01ba_ok
     hlt
@@ -531,7 +540,6 @@ test_01ba_ok:
     jz test_01bb_ok
     hlt
 test_01bb_ok:
-
 
 finish:
 ''')

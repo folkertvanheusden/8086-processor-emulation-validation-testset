@@ -11,7 +11,7 @@ emit_header(fh)
 
 fh.write(
 '''
-; JMP FAR
+; CALL FAR
 test_004:
     mov si,#$0004
     DB $9A ; opcode for call far

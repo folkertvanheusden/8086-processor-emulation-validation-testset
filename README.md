@@ -74,7 +74,6 @@ to do
 -----
 * [BP + SI]
 * more segment override tests (for specific instructions and es/cs/ss)
-* 'NOT': different ds and cs
 * repe / repnz
 * push cs / push ss / pop sp / push sp
 * cmpsb / lodsb

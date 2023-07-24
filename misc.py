@@ -515,7 +515,7 @@ test_01b:
     dw $1234
 test_01b_go:
     mov si,#$001b
-    mov ax,#$0002
+    mov ax,#$0005
     mov ds,ax
     mov ax,#test_01b
     mov bp,ax
@@ -523,7 +523,7 @@ test_01b_go:
     not [test_01b]
     ; ax is 0 here
     mov ds,ax
-    cmp [bp + $20],#$EDCB
+    cmp [bp + si],#$EDCB
     jz test_01ba_ok
     hlt
 test_01ba_ok:

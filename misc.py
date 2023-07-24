@@ -502,11 +502,13 @@ test_01b_go:
     mov si,#$001b
     mov ax,#$0002
     mov ds,ax
+    mov ax,#test_01b
+    mov bp,ax
     xor ax,ax
     not [test_01b]
     ; ax is 0 here
     mov ds,ax
-    cmp [test_01b + 2],#$EDCB
+    cmp [bp + 2],#$EDCB
     jz test_01ba_ok
     hlt
 test_01ba_ok:

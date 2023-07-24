@@ -512,30 +512,56 @@ test_01b:
     dw $5678
     dw $5678
     dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
+    dw $5678
     dw $1234
 test_01b_go:
     mov si,#$001b
 
     ; NOT offset
     mov ax,#$0005
-    ; ds is shifted 4 and then added so effectively this is an offset of $20
+    ; ds is shifted 4 and then added so effectively this is an offset of $50
     mov ds,ax
 
     xor ax,ax
     not [test_01b]
+    push ax
     ; ax is 0 here
     mov ds,ax
 
     ; CMP offset
     mov ax,#test_01b
-    ; si = $1b here; $1b+5 = $20
-    add ax,#$05
+    ; si = $1b here; $1b+$35 = $50
+    add ax,#$35
     mov bp,ax
 
     cmp [bp + si],#$EDCB
     jz test_01ba_ok
     hlt
 test_01ba_ok:
+    pop ax
     cmp ax,#$0000
     jz test_01bb_ok
     hlt

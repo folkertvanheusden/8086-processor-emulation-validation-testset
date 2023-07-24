@@ -30,6 +30,7 @@ test_002_sub:
 test_002_ok:
     jmp test_003
 
+; jump while dereferencing dw containing target address
 test_003_data:
     dw test_003_ok
 test_003:
@@ -39,6 +40,7 @@ test_003:
 test_003_ok:
     jmp test_004
 
+; call while dereferencing dw containing target address
 test_004_data:
     dw test_004_sub
 test_004:
@@ -51,9 +53,11 @@ test_004_sub:
     hlt
 test_004_ok:
 
+; retn
 test_005:
     mov si,#$0004
     mov ax,sp
+    push si
     push ax
     push ax
     push ax
@@ -62,6 +66,11 @@ test_005:
 test_005_sub:
     ret 6
 test_005_cont:
+    pop bx
+    cmp bx,#$0004
+    jz test_005_contb
+    hlt
+test_005_contb:
     cmp ax,sp
     jz test_005_ok
     hlt

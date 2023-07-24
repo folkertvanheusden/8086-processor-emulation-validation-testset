@@ -72,7 +72,6 @@ run\_tests.py is a convenience script for testing the DotXT emulator.
 
 to do
 -----
-* [BP + SI]
 * more segment override tests (for specific instructions and es/cs/ss)
 * repe / repnz
 * push cs / push ss / pop sp / push sp

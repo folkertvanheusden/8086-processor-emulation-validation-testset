@@ -360,6 +360,57 @@ test_010_ok1:
     hlt
 test_010_ok2:
 
+; test of CMPSW & REPZ
+test_011:
+    mov si,#$0011
+    jmp test_011_do
+
+test_011_source:
+    dw $0000
+    dw $0000
+    dw $dead
+t011_source_after:
+    dw $0000
+
+test_011_dest:
+    dw $0000
+    dw $0000
+    dw $beef
+t011_dest_after:
+    dw $0000
+
+test_011_do:
+    mov si,#$0011
+    mov ax,#test_011_source
+    mov si,ax
+
+    mov ax,#test_011_dest
+    mov di,ax
+
+    cld
+    mov cx,#4
+
+    repz
+    cmpsw
+
+    cmp cx,#1
+    jz test_011_cx_ok
+    hlt
+test_011_cx_ok:
+
+    mov ax,#t011_source_after
+    cmp si,ax
+    jz test_011_si_ok
+    hlt
+
+test_011_si_ok:
+    mov ax,#t011_dest_after
+    cmp di,ax
+    jz test_011_di_ok
+    hlt
+
+test_011_di_ok:
+
 finish:
 ''')
 

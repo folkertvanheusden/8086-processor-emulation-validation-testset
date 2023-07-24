@@ -80,11 +80,9 @@ to do
 * call far ptr (0x9a)
 * jmp far ptr (0xea)
 * string functions: both directions
-* retn (0xcb)
 * in/out
-* call far (0xfe/3)
-* jmp (0xfe/5)
-* push rmw (0xfe/6)
+* jmp (0xff/5)
+* push rmw (0xff/6)
 
 
 license

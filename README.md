@@ -77,7 +77,6 @@ to do
 * push cs / push ss / pop sp / push sp
 * cmpsb / lodsb
 * 0x83 with sign extend
-* string functions: both directions
 * in/out
 * jmp (0xff/5)
 * push rmw (0xff/6)

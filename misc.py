@@ -494,6 +494,28 @@ test_01a:
     hlt
 test_01a_ok:
 
+; NOT
+test_01b:
+    dw $5678
+    dw $1234
+test_01b_go:
+    mov si,#$001b
+    mov ax,#$0002
+    mov ds,ax
+    xor ax,ax
+    not [test_01b]
+    ; ax is 0 here
+    mov ds,ax
+    cmp [test_01b + 2],#$EDCB
+    jz test_01ba_ok
+    hlt
+test_01ba_ok:
+    cmp ax,#$0000
+    jz test_01bb_ok
+    hlt
+test_01bb_ok:
+
+
 finish:
 ''')
 

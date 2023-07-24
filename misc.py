@@ -523,7 +523,7 @@ test_01b_go:
     not [test_01b]
     ; ax is 0 here
     mov ds,ax
-    cmp [bp + 20],#$EDCB
+    cmp [bp + $20],#$EDCB
     jz test_01ba_ok
     hlt
 test_01ba_ok:

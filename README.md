@@ -79,7 +79,6 @@ to do
 * 0x83 with sign extend
 * call far ptr (0x9a)
 * jmp far ptr (0xea)
-* div divide by zero
 * string functions: both directions
 * retn (0xcb)
 * in/out

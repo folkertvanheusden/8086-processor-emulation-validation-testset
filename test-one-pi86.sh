@@ -9,6 +9,7 @@ echo Compiling validation tool...
 mkdir build
 cd build && cmake .. && make -j)
 
+echo -n "$1 - "
 ./pi86-verify/build/verify-with-pi86 ${BASE}.bin ${BASE}.log
 
 if [ $? -ne 0 ] ; then

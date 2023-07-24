@@ -69,7 +69,25 @@ instructions regarding the undefined bits.
 
 run\_tests.py is a convenience script for testing the DotXT emulator.
 
-BCD testing (bcd.py) is not finished.
+
+to do
+-----
+* [BP + SI]
+* more segment override tests (for specific instructions and es/cs/ss)
+* 'NOT': different ds and cs
+* repe / repnz
+* push cs / push ss / pop sp / push sp
+* cmpsb / lodsb
+* 0x83 with sign extend
+* call far ptr (0x9a)
+* jmp far ptr (0xea)
+* div divide by zero
+* string functions: both directions
+* retn (0xcb)
+* in/out
+* call far (0xfe/3)
+* jmp (0xfe/5)
+* push rmw (0xfe/6)
 
 
 license

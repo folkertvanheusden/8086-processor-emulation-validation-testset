@@ -77,8 +77,6 @@ to do
 * push cs / push ss / pop sp / push sp
 * cmpsb / lodsb
 * 0x83 with sign extend
-* call far ptr (0x9a)
-* jmp far ptr (0xea)
 * string functions: both directions
 * in/out
 * jmp (0xff/5)

@@ -121,6 +121,39 @@ pop_sp_fail2:
 pop_sp_fail3:
 ''')
 
+# push/pop ss
+fh.write('''
+    ; adjust sp so that ss can be changed
+    mov ax,sp
+    sub ax,#$20
+    mov sp,ax
+
+    ; ss:sp now points to the previous location
+    mov ax,#$2
+    mov ss,ax
+
+    push ss
+
+    ; clear ss
+    xor ax,ax
+    mov ss,ax
+    ; reset sp
+    mov ax,sp
+    add ax,#$20
+    mov sp,ax
+
+    pop ss
+
+    mov ax,ss
+    cmp ax,#$2
+    jz ss_test_ok
+    hlt
+ss_test_ok:
+
+    xor ax,ax
+    mov ss,ax
+''')
+
 emit_tail(fh)
 
 fh.close()

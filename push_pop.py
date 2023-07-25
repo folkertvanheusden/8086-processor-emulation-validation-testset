@@ -165,6 +165,20 @@ fh.write('''
 cs_push_ok:
 ''')
 
+# push value from [memory]
+fh.write('''
+    jmp ignore_word
+push_word:
+    dw $4a9f
+ignore_word:
+    push push_word
+    pop ax
+    cmp ax,#$4a9f
+    jz cs_push_ok2
+    hlt
+cs_push_ok2:
+''')
+
 emit_tail(fh)
 
 fh.close()

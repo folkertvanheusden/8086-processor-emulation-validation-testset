@@ -78,7 +78,6 @@ to do
 * 0x83 with sign extend
 * in/out
 * jmp (0xff/5)
-* push rmw (0xff/6)
 
 
 license

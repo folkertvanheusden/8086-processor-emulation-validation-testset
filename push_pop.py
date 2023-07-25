@@ -88,6 +88,39 @@ fh.write('''
 ds_test_1:
 ''')
 
+# pop SP
+fh.write('''
+    jmp skip_dw_2
+    dw $3321
+skip_dw_2:
+    mov bx,sp
+    mov sp,#skip_dw_2
+    pop sp
+    mov ax,sp
+    cmp ax,#$3321
+    jnz pop_sp_fail
+    hlt
+pop_sp_fail:
+    mov sp,bx
+''')
+
+# push SP
+fh.write('''
+    mov bx,sp
+    push sp
+    mov ax,sp
+    mov di,ax
+    cmp [di],bx
+    jnz pop_sp_fail2
+    hlt
+pop_sp_fail2:
+    pop sp
+    cmp bx,sp
+    jnz pop_sp_fail3
+    hlt
+pop_sp_fail3:
+''')
+
 emit_tail(fh)
 
 fh.close()

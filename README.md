@@ -74,10 +74,9 @@ to do
 -----
 * more segment override tests (for specific instructions and es/cs/ss)
 * repe
-* push cs / push ss / pop sp / push sp
+* push cs / push ss
 * cmpsb / lodsb
 * 0x83 with sign extend
-* string functions: both directions
 * in/out
 * jmp (0xff/5)
 * push rmw (0xff/6)

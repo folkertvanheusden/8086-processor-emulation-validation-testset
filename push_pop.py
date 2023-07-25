@@ -154,6 +154,17 @@ ss_test_ok:
     mov ss,ax
 ''')
 
+# push cs
+fh.write('''
+    push cs
+
+    pop ax
+    cmp ax,#$0000
+    jz cs_push_ok
+    hlt
+cs_push_ok:
+''')
+
 emit_tail(fh)
 
 fh.close()

@@ -74,7 +74,6 @@ to do
 -----
 * more segment override tests (for specific instructions and es/cs/ss)
 * repe
-* push cs
 * cmpsb / lodsb
 * 0x83 with sign extend
 * in/out

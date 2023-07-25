@@ -171,12 +171,28 @@ fh.write('''
 push_word:
     dw $4a9f
 ignore_word:
-    push push_word
+    push word [push_word]
     pop ax
     cmp ax,#$4a9f
-    jz cs_push_ok2
+    jz push_word_ok
     hlt
-cs_push_ok2:
+push_word_ok:
+''')
+
+# push value from [memory]
+fh.write('''
+    jmp ignore_word2
+pop_word:
+    dw $0000
+ignore_word2:
+    mov ax,#$2735
+    push ax
+    pop word [pop_word]
+    mov ax,[pop_word]
+    cmp ax,#$2735
+    jz push_word_ok2
+    hlt
+push_word_ok2:
 ''')
 
 emit_tail(fh)

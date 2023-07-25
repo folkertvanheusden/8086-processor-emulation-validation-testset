@@ -207,8 +207,9 @@ fh.write(f'\tcld\n')
 fh.write('\tmov di,#to_end\n')
 fh.write('\tdec di\n')
 fh.write('\tmov cx,#(to_end - to_start)\n')
+
 fh.write(f'{label}_loop2b:\n')
-fh.write('\tmovb al,[di]\n')  # TODO: replace by cmpsb loop
+fh.write('\tmovb al,[di]\n')
 fh.write('\tcmp al,#$67\n')
 fh.write(f'\tjne {label}_fail2b\n')
 fh.write(f'\tloop {label}_loop2b\n')

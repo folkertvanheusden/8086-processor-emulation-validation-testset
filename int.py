@@ -51,6 +51,9 @@ test_001a_ok:
 ''')
 
 for i in range(0x14, 0x100):
+    if i == 0xfc:  # internal for martypc
+        continue
+
     fh.write(f'test_002_{i}:\n')
 
     vector_label = f'test_002_{i}_vec'

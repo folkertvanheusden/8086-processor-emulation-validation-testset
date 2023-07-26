@@ -567,43 +567,6 @@ test_01ba_ok:
     hlt
 test_01bb_ok:
 
-; DIV (3)
-; divide by zero
-test_01c:
-    mov si,#$001c
-    jmp test_01c_skip
-test_01c_word:
-    dw 0
-    nop
-    nop
-    nop
-intvec_div3:
-    mov bx,#$7777
-    iret
-test_01c_skip:
-    ; set interrupt vector
-    mov ax,#intvec_div3
-    mov [$0],ax
-    ; this test set should fit in the first segment
-    xor ax,ax
-    mov [$2],ax
-    ;
-    ; will be set to 7777 by interrupt vector
-    xor bx, bx
-    ;
-	mov ax,#0x4321
-	mov dx,#0x8001
-    ; this should invoke interrupt 0
-	div [test_01c_word]
-    cmp bx,#$7777
-    jz test_01c9_ok
-    hlt
-test_01c9_ok:
-    cmp ax,#$e392
-    jnz test_01ca_ok
-    hlt
-test_01ca_ok:
-
 finish:
 ''')
 

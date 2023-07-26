@@ -50,7 +50,7 @@ test_001a_ok:
 
 ''')
 
-for i in range(0x14, 0x100):
+for i in range(0x1, 0x100):
     if i == 0xfc:  # internal for martypc
         continue
 

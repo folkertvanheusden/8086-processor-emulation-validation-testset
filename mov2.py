@@ -1,5 +1,6 @@
 #! /usr/bin/python3
 
+from configuration import *
 from helpers import emit_header, emit_tail
 import sys
 
@@ -22,6 +23,11 @@ test_dws_center:
     dw $0000
     dw $0000
     dw $0000
+test_dw_direct:
+    dw $beef
+
+    dw $0000
+    dw $0000
 
 backup_dws:
     dw 0
@@ -32,13 +38,27 @@ backup_dws:
     dw 0
     dw 0
     dw 0
+    dw 0
+    dw 0
+    dw 0
 
 undo_changes:
+    push ax
+    push si
+    push di
+    push cx
+    xor ax,ax
+    mov ds,ax
+    mov es,ax
     mov si,#backup_dws
     mov di,#test_dws
-    mov cx,#8
+    mov cx,#11
     rep
     movsw
+    pop cx
+    pop di
+    pop si
+    pop ax
     ret
 
 skip_over_test_dws:
@@ -46,7 +66,7 @@ skip_over_test_dws:
 ; make a copy of the test-data
     mov si,#test_dws
     mov di,#backup_dws
-    mov cx,#8
+    mov cx,#11
     rep
     movsw
 
@@ -132,6 +152,8 @@ for target in (
         mov {target[0]},ax
 
     ''')
+
+fh.write(f'\tmov sp,{program_offset:04x}\n')
 
 rmws = (
     ('[BX + SI]',  # R/M to work on/with
@@ -442,6 +464,16 @@ rmws = (
                 True,
                 0x5678
                 ),
+    ('test_dw_direct', '''
+                ''',
+                0xef,
+                '''
+                MOV register,#$dd
+                ''',
+                0xdd,
+                False,
+                0xbeef
+                ),
     )
 
 # 8A  MOV     rb,rmb	mr d0 d1
@@ -610,6 +642,8 @@ for rmw in rmws:
             {current_label}_ok2:
         ''')
 
+fh.write(f'\tmov sp,{program_offset:04x}\n')
+
 # 8C/8E
 
 fh.write('; NEXT TEST GROUP\n')
@@ -623,13 +657,14 @@ for rmw in rmws:
 
         # 8C
         fh.write(f'''
+            mov sp,{program_offset:04x}
             call undo_changes
 
             {rmw[1]}
 
             mov ax,#{nr + 1}
             mov {rw},ax
-            db $2E ; 'CS prefix'
+            db $2E ; 'CS prefix test1'
             mov {rmw[0]},{rw}
 
             db $2E
@@ -648,18 +683,20 @@ for rmw in rmws:
 
         # 8E
         fh.write(f'''
+            mov sp,{program_offset:04x}
             call undo_changes
 
             {rmw[3].replace('register', 'ax')}
 
-            db $2E ; 'CS prefix'
             mov {rw},{rmw[0]}
+            mov dx,{rw}
 
-            db $2E ; 'CS prefix'
+            xor cx,cx
+            mov {rw},cx
+
             mov ax,{rmw[0]}
-            mov bx,{rw}
 
-            cmp ax,bx
+            cmp ax,dx
             jz {current_label}_ok2
             hlt
             {current_label}_ok2:

@@ -40,7 +40,7 @@ test_001_do:
     std
     mov cx,#3
     cmpsw
-    ble test_001_ok1
+    jl test_001_ok1
     hlt
 
 test_001_ok1:

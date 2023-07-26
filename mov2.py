@@ -131,14 +131,15 @@ rmws = (
                 MOV BX,#$4
                 MOV SI,#test_dws
                 ''',  # init for direction == 0
-                0xbc,  # test value
+                0xbc,  # test value *1
                 '''
                 MOV register,#$0d
                 MOV BX,#$0
                 MOV SI,#test_dws
                 ''',  # init for direction == 1
                 0x0d,  # test value
-                True  # skip if bl/bh/bx
+                True,  # skip if bl/bh/bx
+                0x9abc  # word version of first test value (*1)
                 ),
     ('[BX + DI]', '''
                 MOV BX,#$4
@@ -151,7 +152,8 @@ rmws = (
                 MOV DI,#test_dws + 1
                 ''',
                 0x0c,
-                True
+                True,
+                0xf09a
                 ),
     ('[BX + SI + 2]', '''
                 MOV BX,#$4
@@ -164,7 +166,8 @@ rmws = (
                 MOV SI,#test_dws
                 ''',
                 0x0b,
-                True
+                True,
+                0x00f0,
                 ),
     ('[BX + DI + 2]', '''
                 MOV BX,#$4
@@ -177,7 +180,8 @@ rmws = (
                 MOV DI,#test_dws + 1
                 ''',
                 0x0a,
-                True
+                True,
+                0xdef0
                 ),
 
     ('[BP + SI]', '''
@@ -191,7 +195,8 @@ rmws = (
                 MOV SI,#test_dws
                 ''',
                 0x09,
-                False
+                False,
+                0x9abc
                 ),
     ('[BP + DI]', '''
                 MOV BP,#$4
@@ -204,7 +209,8 @@ rmws = (
                 MOV DI,#test_dws + 1
                 ''',
                 0x08,
-                False
+                False,
+                0xf09a
                 ),
     ('[BP + SI + 2]', '''
                 MOV BP,#$4
@@ -217,7 +223,8 @@ rmws = (
                 MOV SI,#test_dws
                 ''',
                 0x07,
-                False
+                False,
+                0x00f0,
                 ),
     ('[BP + DI + 2]', '''
                 MOV BP,#$4
@@ -229,7 +236,8 @@ rmws = (
                 MOV DI,#test_dws + 1
                 ''',
                 0x06,
-                False
+                False,
+                0xdef0,
                 ),
 
     ('[SI]', '''
@@ -241,7 +249,8 @@ rmws = (
                 MOV SI,#test_dws
                 ''',
                 0x05,
-                False
+                False,
+                0x5634
                 ),
     ('[SI]', '''
                 MOV SI,#test_dws + 1
@@ -252,7 +261,8 @@ rmws = (
                 MOV SI,#test_dws + 1
                 ''',
                 0x04,
-                False
+                False,
+                0x1234
                 ),
     ('[DI]', '''
                 MOV DI,#test_dws
@@ -263,7 +273,8 @@ rmws = (
                 MOV DI,#test_dws
                 ''',
                 0x04,
-                False
+                False,
+                0x5634
                 ),
     ('[DI]', '''
                 MOV DI,#test_dws + 1
@@ -274,7 +285,8 @@ rmws = (
                 MOV DI,#test_dws + 1
                 ''',
                 0x03,
-                False
+                False,
+                0x1234
                 ),
 
     ('[SI + 2]', '''
@@ -286,7 +298,8 @@ rmws = (
                 MOV SI,#test_dws
                 ''',
                 0x02,
-                False
+                False,
+                0x9a78
                 ),
     ('[SI + 2]', '''
                 MOV SI,#test_dws + 1
@@ -297,7 +310,8 @@ rmws = (
                 MOV SI,#test_dws + 1
                 ''',
                 0x01,
-                False
+                False,
+                0x5678
                 ),
     ('[DI + 2]', '''
                 MOV DI,#test_dws
@@ -308,7 +322,8 @@ rmws = (
                 MOV DI,#test_dws
                 ''',
                 0x38,
-                False
+                False,
+                0x9a78
                 ),
     ('[DI + 2]', '''
                 MOV DI,#test_dws + 1
@@ -319,7 +334,8 @@ rmws = (
                 MOV DI,#test_dws + 1
                 ''',
                 0x58,
-                False
+                False,
+                0x5678
                 ),
 
     ('[BP]', '''
@@ -331,7 +347,8 @@ rmws = (
                 MOV BP,#test_dws
                 ''',
                 0x78,
-                False
+                False,
+                0x3456
                 ),
     ('[BP]', '''
                 MOV BP,#test_dws + 1
@@ -342,7 +359,8 @@ rmws = (
                 MOV BP,#test_dws + 1
                 ''',
                 0x98,
-                False
+                False,
+                0x1234
                 ),
     ('[BX]', '''
                 MOV BX,#test_dws
@@ -353,7 +371,8 @@ rmws = (
                 MOV BX,#test_dws
                 ''',
                 0x90,
-                True
+                True,
+                0x3456
                 ),
     ('[BX]', '''
                 MOV BX,#test_dws + 1
@@ -364,7 +383,8 @@ rmws = (
                 MOV BX,#test_dws + 1
                 ''',
                 0x94,
-                True
+                True,
+                0x1234
                 ),
     ('[BP + 2]', '''
                 MOV BP,#test_dws
@@ -375,7 +395,8 @@ rmws = (
                 MOV BP,#test_dws
                 ''',
                 0x14,
-                False
+                False,
+                0x789a
                 ),
     ('[BP + 2]', '''
                 MOV BP,#test_dws + 1
@@ -386,7 +407,8 @@ rmws = (
                 MOV BP,#test_dws + 1
                 ''',
                 0x34,
-                False
+                False,
+                0x5678
                 ),
     ('[BX + 2]', '''
                 MOV BX,#test_dws
@@ -397,7 +419,8 @@ rmws = (
                 MOV BX,#test_dws
                 ''',
                 0x32,
-                True
+                True,
+                0x789a
                 ),
     ('[BX + 2]', '''
                 MOV BX,#test_dws + 1
@@ -408,7 +431,8 @@ rmws = (
                 MOV BX,#test_dws + 1
                 ''',
                 0x22,
-                True
+                True,
+                0x5678
                 ),
     )
 
@@ -469,7 +493,7 @@ for direction in range(0, 2):
                 sys.exit(1)
 
 # A2-A3, C6-C7
-sub_label = f'a2a3_'
+sub_label = f'a2a3_c6c7_'
 for rmw in rmws:
     current_label = label + sub_label + f'{nr}'
     nr += 1
@@ -531,6 +555,41 @@ for rmw in rmws:
         {current_label}_ok4:
 
     ''')
+
+# 89/8B
+sub_label = f'898B_'
+for rmw in rmws:
+    for rw in ('ax', 'cx', 'dx', 'bx', 'sp', 'bp', 'si', 'di'):
+        current_label = label + sub_label + f'{nr}'
+        nr += 1
+
+        # 89
+        fh.write(f'''
+            call undo_changes
+
+            {rmw[1]}
+
+            mov {rw},#$9911
+            mov word {rmw[0]},{rw}
+            cmp word {rmw[0]},#$9911
+            jz {current_label}_ok
+            hlt
+            {current_label}_ok:
+        ''')
+
+        # 8B
+        fh.write(f'''
+            call undo_changes
+
+            {rmw[1]}
+
+            mov word {rmw[0]},#${rmw[6]:04x}
+            mov word {rw},{rmw[0]}
+            cmp word {rw},#${rmw[6]:04x}
+            jz {current_label}_ok2
+            hlt
+            {current_label}_ok2:
+        ''')
 
 emit_tail(fh)
 

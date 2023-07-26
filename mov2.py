@@ -468,12 +468,13 @@ for direction in range(0, 2):
                 printf('Test generator internal error')
                 sys.exit(1)
 
-# A2-A3
-sub_label = f'a2_'
+# A2-A3, C6-C7
+sub_label = f'a2a3_'
 for rmw in rmws:
     current_label = label + sub_label + f'{nr}'
     nr += 1
 
+    # A2
     fh.write(f'''
         call undo_changes
 
@@ -488,6 +489,7 @@ for rmw in rmws:
 
     ''')
 
+    # A3
     fh.write(f'''
         call undo_changes
 
@@ -499,6 +501,34 @@ for rmw in rmws:
         jz {current_label}_ok2
         hlt
         {current_label}_ok2:
+
+    ''')
+
+    # C6
+    fh.write(f'''
+        call undo_changes
+
+        {rmw[1]}
+
+        mov byte {rmw[0]},#$37
+        cmp byte {rmw[0]},#$37
+        jz {current_label}_ok3
+        hlt
+        {current_label}_ok3:
+
+    ''')
+
+    # C7
+    fh.write(f'''
+        call undo_changes
+
+        {rmw[1]}
+
+        mov word {rmw[0]},#$3278
+        cmp word {rmw[0]},#$3278
+        jz {current_label}_ok4
+        hlt
+        {current_label}_ok4:
 
     ''')
 

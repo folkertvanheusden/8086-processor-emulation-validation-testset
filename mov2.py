@@ -132,17 +132,19 @@ for direction in range(0, 2):
     nr = 0
 
     for source in (
-            ('[BX + SI]', '''
+            ('[BX + SI]',  # R/M to work on/with
+                        '''
                         MOV BX,#$4
                         MOV SI,#test_dws
-                        ''',
-                        0xbc,
+                        ''',  # init for direction == 0
+                        0xbc,  # test value
                         '''
                         MOV register,#$0d
                         MOV BX,#$0
                         MOV SI,#test_dws
-                        ''',
-                        0x0d
+                        ''',  # init for direction == 1
+                        0x0d,  # test value
+                        True  # skip if bl/bh/bx
                         ),
             ('[BX + DI]', '''
                         MOV BX,#$4
@@ -154,7 +156,8 @@ for direction in range(0, 2):
                         MOV BX,#$0
                         MOV DI,#test_dws + 1
                         ''',
-                        0x0c
+                        0x0c,
+                        True
                         ),
             ('[BX + SI + 2]', '''
                         MOV BX,#$4
@@ -166,7 +169,8 @@ for direction in range(0, 2):
                         MOV BX,#$4
                         MOV SI,#test_dws
                         ''',
-                        0x0b
+                        0x0b,
+                        True
                         ),
             ('[BX + DI + 2]', '''
                         MOV BX,#$4
@@ -178,7 +182,8 @@ for direction in range(0, 2):
                         MOV BX,#$4
                         MOV DI,#test_dws + 1
                         ''',
-                        0x0a
+                        0x0a,
+                        True
                         ),
 
             ('[BP + SI]', '''
@@ -191,7 +196,8 @@ for direction in range(0, 2):
                         MOV BP,#$4
                         MOV SI,#test_dws
                         ''',
-                        0x09
+                        0x09,
+                        False
                         ),
             ('[BP + DI]', '''
                         MOV BP,#$4
@@ -203,7 +209,8 @@ for direction in range(0, 2):
                         MOV BP,#$4
                         MOV DI,#test_dws + 1
                         ''',
-                        0x08
+                        0x08,
+                        False
                         ),
             ('[BP + SI + 2]', '''
                         MOV BP,#$4
@@ -215,7 +222,8 @@ for direction in range(0, 2):
                         MOV BP,#$4
                         MOV SI,#test_dws
                         ''',
-                        0x07
+                        0x07,
+                        False
                         ),
             ('[BP + DI + 2]', '''
                         MOV BP,#$4
@@ -226,7 +234,8 @@ for direction in range(0, 2):
                         MOV BP,#$4
                         MOV DI,#test_dws + 1
                         ''',
-                        0x06
+                        0x06,
+                        False
                         ),
 
             ('[SI]', '''
@@ -237,7 +246,8 @@ for direction in range(0, 2):
                         MOV register,#$05
                         MOV SI,#test_dws
                         ''',
-                        0x05
+                        0x05,
+                        False
                         ),
             ('[SI]', '''
                         MOV SI,#test_dws + 1
@@ -247,7 +257,8 @@ for direction in range(0, 2):
                         MOV register,#$04
                         MOV SI,#test_dws + 1
                         ''',
-                        0x04
+                        0x04,
+                        False
                         ),
             ('[DI]', '''
                         MOV DI,#test_dws
@@ -257,7 +268,8 @@ for direction in range(0, 2):
                         MOV register,#$04
                         MOV DI,#test_dws
                         ''',
-                        0x04
+                        0x04,
+                        False
                         ),
             ('[DI]', '''
                         MOV DI,#test_dws + 1
@@ -267,7 +279,8 @@ for direction in range(0, 2):
                         MOV register,#$03
                         MOV DI,#test_dws + 1
                         ''',
-                        0x03
+                        0x03,
+                        False
                         ),
 
             ('[SI + 2]', '''
@@ -278,7 +291,8 @@ for direction in range(0, 2):
                         MOV register,#$02
                         MOV SI,#test_dws
                         ''',
-                        0x02
+                        0x02,
+                        False
                         ),
             ('[SI + 2]', '''
                         MOV SI,#test_dws + 1
@@ -288,7 +302,8 @@ for direction in range(0, 2):
                         MOV register,#$01
                         MOV SI,#test_dws + 1
                         ''',
-                        0x01
+                        0x01,
+                        False
                         ),
             ('[DI + 2]', '''
                         MOV DI,#test_dws
@@ -298,7 +313,8 @@ for direction in range(0, 2):
                         MOV register,#$38
                         MOV DI,#test_dws
                         ''',
-                        0x38
+                        0x38,
+                        False
                         ),
             ('[DI + 2]', '''
                         MOV DI,#test_dws + 1
@@ -308,7 +324,8 @@ for direction in range(0, 2):
                         MOV register,#$58
                         MOV DI,#test_dws + 1
                         ''',
-                        0x58
+                        0x58,
+                        False
                         ),
 
             ('[BP]', '''
@@ -319,7 +336,8 @@ for direction in range(0, 2):
                         MOV register,#$78
                         MOV BP,#test_dws
                         ''',
-                        0x78
+                        0x78,
+                        False
                         ),
             ('[BP]', '''
                         MOV BP,#test_dws + 1
@@ -329,7 +347,8 @@ for direction in range(0, 2):
                         MOV register,#$98
                         MOV BP,#test_dws + 1
                         ''',
-                        0x98
+                        0x98,
+                        False
                         ),
             ('[BX]', '''
                         MOV BX,#test_dws
@@ -339,7 +358,8 @@ for direction in range(0, 2):
                         MOV register,#$90
                         MOV BX,#test_dws
                         ''',
-                        0x90
+                        0x90,
+                        True
                         ),
             ('[BX]', '''
                         MOV BX,#test_dws + 1
@@ -349,7 +369,8 @@ for direction in range(0, 2):
                         MOV register,#$94
                         MOV BX,#test_dws + 1
                         ''',
-                        0x94
+                        0x94,
+                        True
                         ),
             ('[BP + 2]', '''
                         MOV BP,#test_dws
@@ -359,7 +380,8 @@ for direction in range(0, 2):
                         MOV register,#$14
                         MOV BP,#test_dws
                         ''',
-                        0x14
+                        0x14,
+                        False
                         ),
             ('[BP + 2]', '''
                         MOV BP,#test_dws + 1
@@ -369,7 +391,8 @@ for direction in range(0, 2):
                         MOV register,#$34
                         MOV BP,#test_dws + 1
                         ''',
-                        0x34
+                        0x34,
+                        False
                         ),
             ('[BX + 2]', '''
                         MOV BX,#test_dws
@@ -379,7 +402,8 @@ for direction in range(0, 2):
                         MOV register,#$32
                         MOV BX,#test_dws
                         ''',
-                        0x32
+                        0x32,
+                        True
                         ),
             ('[BX + 2]', '''
                         MOV BX,#test_dws + 1
@@ -389,7 +413,8 @@ for direction in range(0, 2):
                         MOV register,#$22
                         MOV BX,#test_dws + 1
                         ''',
-                        0x22
+                        0x22,
+                        True
                         ),
             ):
 
@@ -403,6 +428,10 @@ for direction in range(0, 2):
                 (6, 'dh'),
                 (7, 'bh'),
                 ):
+
+            if source[5] and (target[1] == 'bl' or target[1] == 'bh'):
+                continue
+
             current_label = label + sub_label + f'{nr}'
             nr += 1
 
@@ -411,7 +440,7 @@ for direction in range(0, 2):
                     {source[1]}
 
                     mov {target[1]},{source[0]}
-                    cmp {target[1]},#${source[2]:02x}
+                    cmp byte {target[1]},#${source[2]:02x}
                     jz {current_label}
                     hlt
                 {current_label}:
@@ -425,7 +454,7 @@ for direction in range(0, 2):
                     {source[3].replace('register', target[1])}
 
                     mov {source[0]},{target[1]}
-                    cmp {source[0]},#${source[4]:02x}
+                    cmp byte {source[0]},#${source[4]:02x}
                     jz {current_label}
                     hlt
                 {current_label}:

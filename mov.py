@@ -21,7 +21,7 @@ test_001:
 test_001_ok:
 
 test_002:
-; read from address pointer by
+; read from address pointer by label
     mov si,#0002
     mov ax,[word_read_001]
     cmp ax,#$4567

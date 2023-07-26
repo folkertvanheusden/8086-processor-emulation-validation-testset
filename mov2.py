@@ -125,298 +125,300 @@ for target in (
 
     ''')
 
+rmws = (
+    ('[BX + SI]',  # R/M to work on/with
+                '''
+                MOV BX,#$4
+                MOV SI,#test_dws
+                ''',  # init for direction == 0
+                0xbc,  # test value
+                '''
+                MOV register,#$0d
+                MOV BX,#$0
+                MOV SI,#test_dws
+                ''',  # init for direction == 1
+                0x0d,  # test value
+                True  # skip if bl/bh/bx
+                ),
+    ('[BX + DI]', '''
+                MOV BX,#$4
+                MOV DI,#test_dws + 1
+                ''',
+                0x9a,
+                '''
+                MOV register,#$0c
+                MOV BX,#$0
+                MOV DI,#test_dws + 1
+                ''',
+                0x0c,
+                True
+                ),
+    ('[BX + SI + 2]', '''
+                MOV BX,#$4
+                MOV SI,#test_dws
+                ''',
+                0xf0,
+                '''
+                MOV register,#$0b
+                MOV BX,#$4
+                MOV SI,#test_dws
+                ''',
+                0x0b,
+                True
+                ),
+    ('[BX + DI + 2]', '''
+                MOV BX,#$4
+                MOV DI,#test_dws + 1
+                ''',
+                0xde,
+                '''
+                MOV register,#$0a
+                MOV BX,#$4
+                MOV DI,#test_dws + 1
+                ''',
+                0x0a,
+                True
+                ),
+
+    ('[BP + SI]', '''
+                MOV BP,#$4
+                MOV SI,#test_dws
+                ''',
+                0xbc,
+                '''
+                MOV register,#$09
+                MOV BP,#$4
+                MOV SI,#test_dws
+                ''',
+                0x09,
+                False
+                ),
+    ('[BP + DI]', '''
+                MOV BP,#$4
+                MOV DI,#test_dws + 1
+                ''',
+                0x9a,
+                '''
+                MOV register,#$08
+                MOV BP,#$4
+                MOV DI,#test_dws + 1
+                ''',
+                0x08,
+                False
+                ),
+    ('[BP + SI + 2]', '''
+                MOV BP,#$4
+                MOV SI,#test_dws
+                ''',
+                0xf0,
+                '''
+                MOV register,#$07
+                MOV BP,#$4
+                MOV SI,#test_dws
+                ''',
+                0x07,
+                False
+                ),
+    ('[BP + DI + 2]', '''
+                MOV BP,#$4
+                MOV DI,#test_dws + 1
+                ''',
+                0xde,
+                '''MOV register,#$06
+                MOV BP,#$4
+                MOV DI,#test_dws + 1
+                ''',
+                0x06,
+                False
+                ),
+
+    ('[SI]', '''
+                MOV SI,#test_dws
+                ''',
+                0x34,
+                '''
+                MOV register,#$05
+                MOV SI,#test_dws
+                ''',
+                0x05,
+                False
+                ),
+    ('[SI]', '''
+                MOV SI,#test_dws + 1
+                ''',
+                0x12,
+                '''
+                MOV register,#$04
+                MOV SI,#test_dws + 1
+                ''',
+                0x04,
+                False
+                ),
+    ('[DI]', '''
+                MOV DI,#test_dws
+                ''',
+                0x34,
+                '''
+                MOV register,#$04
+                MOV DI,#test_dws
+                ''',
+                0x04,
+                False
+                ),
+    ('[DI]', '''
+                MOV DI,#test_dws + 1
+                ''',
+                0x12,
+                '''
+                MOV register,#$03
+                MOV DI,#test_dws + 1
+                ''',
+                0x03,
+                False
+                ),
+
+    ('[SI + 2]', '''
+                MOV SI,#test_dws
+                ''',
+                0x78,
+                '''
+                MOV register,#$02
+                MOV SI,#test_dws
+                ''',
+                0x02,
+                False
+                ),
+    ('[SI + 2]', '''
+                MOV SI,#test_dws + 1
+                ''',
+                0x56,
+                '''
+                MOV register,#$01
+                MOV SI,#test_dws + 1
+                ''',
+                0x01,
+                False
+                ),
+    ('[DI + 2]', '''
+                MOV DI,#test_dws
+                ''',
+                0x78,
+                '''
+                MOV register,#$38
+                MOV DI,#test_dws
+                ''',
+                0x38,
+                False
+                ),
+    ('[DI + 2]', '''
+                MOV DI,#test_dws + 1
+                ''',
+                0x56,
+                '''
+                MOV register,#$58
+                MOV DI,#test_dws + 1
+                ''',
+                0x58,
+                False
+                ),
+
+    ('[BP]', '''
+                MOV BP,#test_dws
+                ''',
+                0x34,
+                '''
+                MOV register,#$78
+                MOV BP,#test_dws
+                ''',
+                0x78,
+                False
+                ),
+    ('[BP]', '''
+                MOV BP,#test_dws + 1
+                ''',
+                0x12,
+                '''
+                MOV register,#$98
+                MOV BP,#test_dws + 1
+                ''',
+                0x98,
+                False
+                ),
+    ('[BX]', '''
+                MOV BX,#test_dws
+                ''',
+                0x34,
+                '''
+                MOV register,#$90
+                MOV BX,#test_dws
+                ''',
+                0x90,
+                True
+                ),
+    ('[BX]', '''
+                MOV BX,#test_dws + 1
+                ''',
+                0x12,
+                '''
+                MOV register,#$94
+                MOV BX,#test_dws + 1
+                ''',
+                0x94,
+                True
+                ),
+    ('[BP + 2]', '''
+                MOV BP,#test_dws
+                ''',
+                0x78,
+                '''
+                MOV register,#$14
+                MOV BP,#test_dws
+                ''',
+                0x14,
+                False
+                ),
+    ('[BP + 2]', '''
+                MOV BP,#test_dws + 1
+                ''',
+                0x56,
+                '''
+                MOV register,#$34
+                MOV BP,#test_dws + 1
+                ''',
+                0x34,
+                False
+                ),
+    ('[BX + 2]', '''
+                MOV BX,#test_dws
+                ''',
+                0x78,
+                '''
+                MOV register,#$32
+                MOV BX,#test_dws
+                ''',
+                0x32,
+                True
+                ),
+    ('[BX + 2]', '''
+                MOV BX,#test_dws + 1
+                ''',
+                0x56,
+                '''
+                MOV register,#$22
+                MOV BX,#test_dws + 1
+                ''',
+                0x22,
+                True
+                ),
+    )
+
 # 8A  MOV     rb,rmb	mr d0 d1
 fh.write('\tcall undo_changes\n')
 for direction in range(0, 2):
     sub_label = f'8a_{direction}_'
     nr = 0
 
-    for source in (
-            ('[BX + SI]',  # R/M to work on/with
-                        '''
-                        MOV BX,#$4
-                        MOV SI,#test_dws
-                        ''',  # init for direction == 0
-                        0xbc,  # test value
-                        '''
-                        MOV register,#$0d
-                        MOV BX,#$0
-                        MOV SI,#test_dws
-                        ''',  # init for direction == 1
-                        0x0d,  # test value
-                        True  # skip if bl/bh/bx
-                        ),
-            ('[BX + DI]', '''
-                        MOV BX,#$4
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0x9a,
-                        '''
-                        MOV register,#$0c
-                        MOV BX,#$0
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0x0c,
-                        True
-                        ),
-            ('[BX + SI + 2]', '''
-                        MOV BX,#$4
-                        MOV SI,#test_dws
-                        ''',
-                        0xf0,
-                        '''
-                        MOV register,#$0b
-                        MOV BX,#$4
-                        MOV SI,#test_dws
-                        ''',
-                        0x0b,
-                        True
-                        ),
-            ('[BX + DI + 2]', '''
-                        MOV BX,#$4
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0xde,
-                        '''
-                        MOV register,#$0a
-                        MOV BX,#$4
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0x0a,
-                        True
-                        ),
-
-            ('[BP + SI]', '''
-                        MOV BP,#$4
-                        MOV SI,#test_dws
-                        ''',
-                        0xbc,
-                        '''
-                        MOV register,#$09
-                        MOV BP,#$4
-                        MOV SI,#test_dws
-                        ''',
-                        0x09,
-                        False
-                        ),
-            ('[BP + DI]', '''
-                        MOV BP,#$4
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0x9a,
-                        '''
-                        MOV register,#$08
-                        MOV BP,#$4
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0x08,
-                        False
-                        ),
-            ('[BP + SI + 2]', '''
-                        MOV BP,#$4
-                        MOV SI,#test_dws
-                        ''',
-                        0xf0,
-                        '''
-                        MOV register,#$07
-                        MOV BP,#$4
-                        MOV SI,#test_dws
-                        ''',
-                        0x07,
-                        False
-                        ),
-            ('[BP + DI + 2]', '''
-                        MOV BP,#$4
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0xde,
-                        '''MOV register,#$06
-                        MOV BP,#$4
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0x06,
-                        False
-                        ),
-
-            ('[SI]', '''
-                        MOV SI,#test_dws
-                        ''',
-                        0x34,
-                        '''
-                        MOV register,#$05
-                        MOV SI,#test_dws
-                        ''',
-                        0x05,
-                        False
-                        ),
-            ('[SI]', '''
-                        MOV SI,#test_dws + 1
-                        ''',
-                        0x12,
-                        '''
-                        MOV register,#$04
-                        MOV SI,#test_dws + 1
-                        ''',
-                        0x04,
-                        False
-                        ),
-            ('[DI]', '''
-                        MOV DI,#test_dws
-                        ''',
-                        0x34,
-                        '''
-                        MOV register,#$04
-                        MOV DI,#test_dws
-                        ''',
-                        0x04,
-                        False
-                        ),
-            ('[DI]', '''
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0x12,
-                        '''
-                        MOV register,#$03
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0x03,
-                        False
-                        ),
-
-            ('[SI + 2]', '''
-                        MOV SI,#test_dws
-                        ''',
-                        0x78,
-                        '''
-                        MOV register,#$02
-                        MOV SI,#test_dws
-                        ''',
-                        0x02,
-                        False
-                        ),
-            ('[SI + 2]', '''
-                        MOV SI,#test_dws + 1
-                        ''',
-                        0x56,
-                        '''
-                        MOV register,#$01
-                        MOV SI,#test_dws + 1
-                        ''',
-                        0x01,
-                        False
-                        ),
-            ('[DI + 2]', '''
-                        MOV DI,#test_dws
-                        ''',
-                        0x78,
-                        '''
-                        MOV register,#$38
-                        MOV DI,#test_dws
-                        ''',
-                        0x38,
-                        False
-                        ),
-            ('[DI + 2]', '''
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0x56,
-                        '''
-                        MOV register,#$58
-                        MOV DI,#test_dws + 1
-                        ''',
-                        0x58,
-                        False
-                        ),
-
-            ('[BP]', '''
-                        MOV BP,#test_dws
-                        ''',
-                        0x34,
-                        '''
-                        MOV register,#$78
-                        MOV BP,#test_dws
-                        ''',
-                        0x78,
-                        False
-                        ),
-            ('[BP]', '''
-                        MOV BP,#test_dws + 1
-                        ''',
-                        0x12,
-                        '''
-                        MOV register,#$98
-                        MOV BP,#test_dws + 1
-                        ''',
-                        0x98,
-                        False
-                        ),
-            ('[BX]', '''
-                        MOV BX,#test_dws
-                        ''',
-                        0x34,
-                        '''
-                        MOV register,#$90
-                        MOV BX,#test_dws
-                        ''',
-                        0x90,
-                        True
-                        ),
-            ('[BX]', '''
-                        MOV BX,#test_dws + 1
-                        ''',
-                        0x12,
-                        '''
-                        MOV register,#$94
-                        MOV BX,#test_dws + 1
-                        ''',
-                        0x94,
-                        True
-                        ),
-            ('[BP + 2]', '''
-                        MOV BP,#test_dws
-                        ''',
-                        0x78,
-                        '''
-                        MOV register,#$14
-                        MOV BP,#test_dws
-                        ''',
-                        0x14,
-                        False
-                        ),
-            ('[BP + 2]', '''
-                        MOV BP,#test_dws + 1
-                        ''',
-                        0x56,
-                        '''
-                        MOV register,#$34
-                        MOV BP,#test_dws + 1
-                        ''',
-                        0x34,
-                        False
-                        ),
-            ('[BX + 2]', '''
-                        MOV BX,#test_dws
-                        ''',
-                        0x78,
-                        '''
-                        MOV register,#$32
-                        MOV BX,#test_dws
-                        ''',
-                        0x32,
-                        True
-                        ),
-            ('[BX + 2]', '''
-                        MOV BX,#test_dws + 1
-                        ''',
-                        0x56,
-                        '''
-                        MOV register,#$22
-                        MOV BX,#test_dws + 1
-                        ''',
-                        0x22,
-                        True
-                        ),
-            ):
+    for source in rmws:
 
         for target in (
                 (0, 'al'),
@@ -465,6 +467,40 @@ for direction in range(0, 2):
             else:
                 printf('Test generator internal error')
                 sys.exit(1)
+
+# A2-A3
+sub_label = f'a2_'
+for rmw in rmws:
+    current_label = label + sub_label + f'{nr}'
+    nr += 1
+
+    fh.write(f'''
+        call undo_changes
+
+        {rmw[1]}
+
+        mov al,#$5f
+        mov byte {rmw[0]},al
+        cmp byte {rmw[0]},#$5f
+        jz {current_label}_ok
+        hlt
+        {current_label}_ok:
+
+    ''')
+
+    fh.write(f'''
+        call undo_changes
+
+        {rmw[1]}
+
+        mov ax,#$5f92
+        mov word {rmw[0]},ax
+        cmp word {rmw[0]},#$5f92
+        jz {current_label}_ok2
+        hlt
+        {current_label}_ok2:
+
+    ''')
 
 emit_tail(fh)
 

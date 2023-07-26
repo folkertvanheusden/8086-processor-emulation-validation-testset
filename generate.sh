@@ -18,6 +18,7 @@ python3 misc.py test
 python3 misc2.py test
 python3 misc3.py test
 python3 mov.py test
+python3 mov2.py test
 python3 neg.py test
 python3 or_and_xor_test.py test
 python3 or_and_xor_test_16.py test

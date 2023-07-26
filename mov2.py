@@ -54,6 +54,8 @@ skip_over_test_dws:
 
 label = 'mov2_'
 
+fh.write('; NEXT TEST GROUP\n')
+
 # A0-A1
 fh.write(f'''
 ; a0, MOV     al,rmb
@@ -74,6 +76,9 @@ fh.write(f'''
 ''')
 
 # B0-BB
+
+fh.write('; NEXT TEST GROUP\n')
+
 for target in (
         ('b0', 'b4', 'b8', 'al', 'ah', 'ax'),
         ('b1', 'b5', 'b9', 'cl', 'ch', 'cx'),
@@ -107,6 +112,9 @@ for target in (
     ''')
 
 # BC-BF
+
+fh.write('; NEXT TEST GROUP\n')
+
 for target in (
         ('sp', 'bc'),
         ('bp', 'bd'),
@@ -130,13 +138,13 @@ rmws = (
                 '''
                 MOV BX,#$4
                 MOV SI,#test_dws
-                ''',  # init for direction == 0
+                ''',  # init for direction == 0 ([0] as a source)
                 0xbc,  # test value *1
                 '''
                 MOV register,#$0d
                 MOV BX,#$0
                 MOV SI,#test_dws
-                ''',  # init for direction == 1
+                ''',  # init for direction == 1 ([0] as a destination)
                 0x0d,  # test value
                 True,  # skip if bl/bh/bx
                 0x9abc  # word version of first test value (*1)
@@ -437,10 +445,13 @@ rmws = (
     )
 
 # 8A  MOV     rb,rmb	mr d0 d1
+
+fh.write('; NEXT TEST GROUP\n')
+
 fh.write('\tcall undo_changes\n')
+nr = 0
 for direction in range(0, 2):
     sub_label = f'8a_{direction}_'
-    nr = 0
 
     for source in rmws:
 
@@ -493,7 +504,11 @@ for direction in range(0, 2):
                 sys.exit(1)
 
 # A2-A3, C6-C7
+
+fh.write('; NEXT TEST GROUP\n')
+
 sub_label = f'a2a3_c6c7_'
+nr = 0
 for rmw in rmws:
     current_label = label + sub_label + f'{nr}'
     nr += 1
@@ -557,7 +572,11 @@ for rmw in rmws:
     ''')
 
 # 89/8B
+
+fh.write('; NEXT TEST GROUP\n')
+
 sub_label = f'898B_'
+nr = 0
 for rmw in rmws:
     for rw in ('ax', 'cx', 'dx', 'bx', 'sp', 'bp', 'si', 'di'):
         current_label = label + sub_label + f'{nr}'
@@ -589,6 +608,65 @@ for rmw in rmws:
             jz {current_label}_ok2
             hlt
             {current_label}_ok2:
+        ''')
+
+# 8C/8E
+
+fh.write('; NEXT TEST GROUP\n')
+
+sub_label = f'8C8E_'
+nr = 0
+for rmw in rmws:
+    for rw in ('ES', 'SS', 'DS'):  # skipping CS because problematic TODO
+        current_label = label + sub_label + f'{nr}'
+        nr += 1
+
+        # 8C
+        fh.write(f'''
+            call undo_changes
+
+            {rmw[1]}
+
+            mov ax,#{nr + 1}
+            mov {rw},ax
+            db $2E ; 'CS prefix'
+            mov {rmw[0]},{rw}
+
+            db $2E
+            mov bx,{rmw[0]}
+            mov cx,{rw}
+
+            cmp bx,cx
+            jz {current_label}_ok
+            hlt
+            {current_label}_ok:
+
+            xor ax,ax
+            mov {rw},ax
+
+        ''')
+
+        # 8E
+        fh.write(f'''
+            call undo_changes
+
+            {rmw[3].replace('register', 'ax')}
+
+            db $2E ; 'CS prefix'
+            mov {rw},{rmw[0]}
+
+            db $2E ; 'CS prefix'
+            mov ax,{rmw[0]}
+            mov bx,{rw}
+
+            cmp ax,bx
+            jz {current_label}_ok2
+            hlt
+            {current_label}_ok2:
+
+            xor ax,ax
+            mov {rw},ax
+
         ''')
 
 emit_tail(fh)

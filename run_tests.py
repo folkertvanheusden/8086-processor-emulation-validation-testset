@@ -14,6 +14,8 @@ AS86='/usr/bin/as86'
 
 CUR_PATH=os.getcwd()
 
+keep_files=False
+
 CC=True
 CCREPORT=CUR_PATH + '/ccreport'
 CCXML=CUR_PATH + '/coverage.xml'
@@ -96,7 +98,7 @@ def dotest(i):
     else:
         rc = run_path('../../', f'dotnet run -c Debug -l {LOGFILE} -t {TEST_BIN}', 123)
 
-    if rc == 123:
+    if rc == 123 and keep_files == False:
         if LF:
             try:
                 os.unlink(LOGFILE)

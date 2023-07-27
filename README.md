@@ -54,7 +54,7 @@ Note that this requires 'bash', 'as86' and 'GNU Parallel'.
 
 bugs
 ----
-If you find any bugs or any other problems with this test-set, please
+If you find any bugs or any other problems with this test set, please
 contact me at mail@vanheusden.com
 
 

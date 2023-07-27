@@ -10,8 +10,7 @@ fh = open(p + '/' + 'mov2.asm', 'w')
 
 emit_header(fh)
 
-fh.write(
-f'''
+fh.write(f'''
     jmp skip_over_test_dws
 test_dws:
     dw $1234
@@ -85,7 +84,7 @@ fh.write(f'''
     mov al,[si + 2]
     cmp al,#$78
     jz {label}_a0_ok
-    hlt
+    {get_tail_fail()}
 {label}_a0_ok:
 
 ; a1, MOV     al,rmw
@@ -93,7 +92,7 @@ fh.write(f'''
     mov ax,[si + 2]
     cmp ax,#$5678
     jz {label}_a1_ok
-    hlt
+    {get_tail_fail()}
 {label}_a1_ok:
 ''')
 
@@ -116,21 +115,21 @@ for target in (
     mov {target[3]}, #$ff
     cmp {target[3]}, #$ff
     jz {label}_{target[0]}_ok
-    hlt
+    {get_tail_fail()}
 {label}_{target[0]}_ok:
 
 ; {target[1]}, MOV     {target[4]},ib
     mov {target[4]}, #$9e
     cmp {target[4]}, #$9e
     jz {label}_{target[1]}_ok
-    hlt
+    {get_tail_fail()}
 {label}_{target[1]}_ok:
 
 ; {target[2]}, MOV     {target[5]},ib
     mov {target[5]}, #$9e12
     cmp {target[5]}, #$9e12
     jz {label}_{target[2]}_ok
-    hlt
+    {get_tail_fail()}
 {label}_{target[2]}_ok:
 
     ''')
@@ -153,7 +152,7 @@ for target in (
         mov {target[0]},#$1234
         cmp {target[0]},#$1234
         jz {label}_{target[0]}_ok
-        hlt
+        {get_tail_fail()}
     {label}_{target[0]}_ok:
         mov {target[0]},ax
 
@@ -519,7 +518,7 @@ for direction in range(0, 2):
                     mov {target[1]},{source[0]}
                     cmp byte {target[1]},#${source[2]:02x}
                     jz {current_label}
-                    hlt
+                    {get_tail_fail()}
                 {current_label}:
 
                 ''')
@@ -533,7 +532,7 @@ for direction in range(0, 2):
                     mov {source[0]},{target[1]}
                     cmp byte {source[0]},#${source[4]:02x}
                     jz {current_label}
-                    hlt
+                    {get_tail_fail()}
                 {current_label}:
 
                 ''')
@@ -565,7 +564,7 @@ for rmw in rmws:
         mov byte {rmw[0]},al
         cmp byte {rmw[0]},#$5f
         jz {current_label}_ok
-        hlt
+        {get_tail_fail()}
         {current_label}_ok:
 
     ''')
@@ -580,7 +579,7 @@ for rmw in rmws:
         mov word {rmw[0]},ax
         cmp word {rmw[0]},#$5f92
         jz {current_label}_ok2
-        hlt
+        {get_tail_fail()}
         {current_label}_ok2:
 
     ''')
@@ -594,7 +593,7 @@ for rmw in rmws:
         mov byte {rmw[0]},#$37
         cmp byte {rmw[0]},#$37
         jz {current_label}_ok3
-        hlt
+        {get_tail_fail()}
         {current_label}_ok3:
 
     ''')
@@ -608,7 +607,7 @@ for rmw in rmws:
         mov word {rmw[0]},#$3278
         cmp word {rmw[0]},#$3278
         jz {current_label}_ok4
-        hlt
+        {get_tail_fail()}
         {current_label}_ok4:
 
     ''')
@@ -639,7 +638,7 @@ for rmw in rmws:
             mov word {rmw[0]},{rw}
             cmp word {rmw[0]},#$9911
             jz {current_label}_ok
-            hlt
+            {get_tail_fail()}
             {current_label}_ok:
 
             mov sp,#${program_offset:04x}
@@ -655,7 +654,7 @@ for rmw in rmws:
             mov word {rw},{rmw[0]}
             cmp word {rw},#${rmw[6]:04x}
             jz {current_label}_ok2
-            hlt
+            {get_tail_fail()}
             {current_label}_ok2:
 
             mov sp,#${program_offset:04x}
@@ -692,7 +691,7 @@ for rmw in rmws:
 
             cmp bx,cx
             jz {current_label}_ok
-            hlt
+            {get_tail_fail()}
             {current_label}_ok:
 
             xor ax,ax
@@ -717,7 +716,7 @@ for rmw in rmws:
 
             cmp ax,dx
             jz {current_label}_ok2
-            hlt
+            {get_tail_fail()}
             {current_label}_ok2:
 
             xor ax,ax

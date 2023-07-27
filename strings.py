@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_inc_dec16
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, emit_tail_fail, get_tail_fail
 from values_16b import b16_values
 import sys
 
@@ -51,7 +51,7 @@ def header():
         fh.write('\tret\n')
 
         fh.write('fill_buffers_fail:\n')
-        fh.write('\thlt\n')
+        emit_tail_fail(fh)
 
         fh.write('go:\n')
         fh.write('\tcld\n')
@@ -82,13 +82,13 @@ def emit_test(cx, taken):
             fh.write(f'\tJCXZ {label}_taken\n')
 
             if taken:
-                fh.write(f'\thlt\n')
+                emit_tail_fail(fh)
                 fh.write(f'{label}_taken:\n')
 
             else:
                 fh.write(f'\tjmp {label}_continue\n')
                 fh.write(f'{label}_taken:\n')
-                fh.write(f'\thlt\n')
+                emit_tail_fail(fh)
                 fh.write(f'{label}_continue:\n')
 
         # keep flags
@@ -102,7 +102,7 @@ def emit_test(cx, taken):
             fh.write(f'\tand ax,#$0fff\n')
             fh.write(f'\tcmp ax,#${check_flags:04x}\n')
             fh.write(f'\tjz next_{label}\n')
-            fh.write(f'\thlt\n')
+            emit_tail_fail(fh)
 
         fh.write(f'next_{label}:\n')
         fh.write('\n')
@@ -134,11 +134,11 @@ fh.write(f'\tjne {label}_fail\n')
 fh.write(f'\tloop {label}_loop\n')
 fh.write(f'\tjmp {label}_oksofar\n')
 fh.write(f'{label}_fail:\n')
-fh.write('\thlt\n')
+emit_tail_fail(fh)
 fh.write(f'{label}_oksofar:\n')
 fh.write('\ttest cx,#$0\n')
 fh.write(f'\tjz {label}_ok_end\n')
-fh.write('\thlt\n')
+emit_tail_fail(fh)
 fh.write(f'{label}_ok_end:\n')
 
 fh.write('\tmov di,#to_start\n')
@@ -150,11 +150,11 @@ fh.write(f'\tjne to{label}_fail\n')
 fh.write(f'\tloop to{label}_loop\n')
 fh.write(f'\tjmp to{label}_oksofar\n')
 fh.write(f'to{label}_fail:\n')
-fh.write('\thlt\n')
+emit_tail_fail(fh)
 fh.write(f'to{label}_oksofar:\n')
 fh.write('\ttest cx,#$0\n')
 fh.write(f'\tjz to{label}_ok_end\n')
-fh.write('\thlt\n')
+emit_tail_fail(fh)
 fh.write(f'to{label}_ok_end:\n')
 
 # MOVSB
@@ -175,11 +175,11 @@ fh.write(f'\tjne {label}_fail2\n')
 fh.write(f'\tloop {label}_loop2\n')
 fh.write(f'\tjmp {label}_oksofar2\n')
 fh.write(f'{label}_fail2:\n')
-fh.write('\thlt\n')
+emit_tail_fail(fh)
 fh.write(f'{label}_oksofar2:\n')
 fh.write('\ttest cx,#$0\n')
 fh.write(f'\tjz {label}_ok_end2\n')
-fh.write('\thlt\n')
+emit_tail_fail(fh)
 fh.write(f'{label}_ok_end2:\n')
 
 # MOVSB reverse order
@@ -215,11 +215,11 @@ fh.write(f'\tjne {label}_fail2b\n')
 fh.write(f'\tloop {label}_loop2b\n')
 fh.write(f'\tjmp {label}_oksofar2b\n')
 fh.write(f'{label}_fail2b:\n')
-fh.write('\thlt\n')
+emit_tail_fail(fh)
 fh.write(f'{label}_oksofar2b:\n')
 fh.write('\ttest cx,#$0\n')
 fh.write(f'\tjz {label}_ok_end2b\n')
-fh.write('\thlt\n')
+emit_tail_fail(fh)
 fh.write(f'{label}_ok_end2b:\n')
 
 # LODSB (or any other) starting with CX==0
@@ -232,17 +232,17 @@ fh.write('''
     lodsb
     cmp cx,#$0000
     jz cx0_rep_ok1
-    hlt
+    {get_tail_fail()}
 cx0_rep_ok1:
     mov bx,si
     cmp bx,#$1000
     jz cx0_rep_ok2
-    hlt
+    {get_tail_fail()}
 cx0_rep_ok2:
     mov bx,di
     cmp bx,#$1000
     jz cx0_rep_ok3
-    hlt
+    {get_tail_fail()}
 cx0_rep_ok3:
 ''')
 

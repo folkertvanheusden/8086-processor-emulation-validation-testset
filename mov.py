@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, get_tail_fail
 import sys
 
 p = sys.argv[1]
@@ -9,15 +9,14 @@ fh = open(p + '/' + 'mov.asm', 'w')
 
 emit_header(fh)
 
-fh.write(
-'''
+fh.write(f'''
 ; directly value into register
 test_001:
     mov si,#0001
     mov ax,#$1234
     cmp ax,#$1234
     jz test_001_ok
-    hlt
+    {get_tail_fail()}
 test_001_ok:
 
 test_002:
@@ -26,7 +25,7 @@ test_002:
     mov ax,[word_read_001]
     cmp ax,#$4567
     jz test_002_ok
-    hlt
+    {get_tail_fail()}
 
 test_002_ok:
 
@@ -40,7 +39,7 @@ test_003:
     mov ax,[bx+di]
     cmp ax,#$5926
     jz test_003_ok
-    hlt
+    {get_tail_fail()}
 
 test_003_ok:
 
@@ -52,7 +51,7 @@ test_004:
     mov ax,[word_write_001]
     cmp ax,#$4455
     jz test_004_ok
-    hlt
+    {get_tail_fail()}
 
 test_004_ok:
 
@@ -63,7 +62,7 @@ test_005:
     mov ax,#$3366
     cmp ax,[bx]
     jz test_005_ok
-    hlt
+    {get_tail_fail()}
 
 test_005_ok:
 
@@ -77,7 +76,7 @@ test_006:
     mov ds,cx
     cmp ax,#2277
     jz test_006_ok
-    hlt
+    {get_tail_fail()}
 
 test_006_ok:
 
@@ -87,7 +86,7 @@ test_007:
     mov bx,si
     cmp bx,#0007
     jz test_007_ok
-    hlt
+    {get_tail_fail()}
 
 test_007_ok:
 
@@ -100,7 +99,7 @@ test_008:
     mov ax,[di]
     cmp ax,#$1188
     jz test_008_ok
-    hlt
+    {get_tail_fail()}
 
 test_008_ok:
 
@@ -111,7 +110,7 @@ test_009:
     mov cl,ah
     cmp cl,#$1d
     jz test_009_ok
-    hlt
+    {get_tail_fail()}
 
 test_009_ok:
     jmp test_continue
@@ -139,7 +138,7 @@ test_00a:
     mov ax,word [si - $02]
     cmp ax,#$9977
     jz test_00a_ok
-    hlt
+    {get_tail_fail()}
 
 test_00a_ok:
 
@@ -149,7 +148,7 @@ test_00b:
     mov di,[word_write_001]
     cmp di,#$8844
     jz test_00b_ok
-    hlt
+    {get_tail_fail()}
 
 test_00b_ok:
 
@@ -161,7 +160,7 @@ test_00c:
     mov ax,[bx+di]
     cmp ax,#8384
     jz test_00c_ok
-    hlt
+    {get_tail_fail()}
 
 test_00c_ok:
 
@@ -176,7 +175,7 @@ test_00d:
     mov ax,es
     cmp ax,#$8285
     jz test_00d_ok
-    hlt
+    {get_tail_fail()}
 
 test_00d_ok:
 
@@ -192,7 +191,7 @@ test_00e:
     mov ax,es
     cmp ax,#$9977
     jz test_00e_ok
-    hlt
+    {get_tail_fail()}
 
 test_00e_ok:
 
@@ -203,13 +202,13 @@ test_00f:
     mov cl,#$88
     cmp cx,#$1288
     jz test_00f_a_ok
-    hlt
+    {get_tail_fail()}
 test_00f_a_ok:
     mov cx,#$1234
     mov ch,#$44
     cmp cx,#$4434
     jz test_00f_b_ok
-    hlt
+    {get_tail_fail()}
 test_00f_b_ok:
 
 test_010:
@@ -220,7 +219,7 @@ test_010:
     mov cx,ax
     cmp cx,#$9988
     jz test_010_ok
-    hlt
+    {get_tail_fail()}
 test_010_ok:
 
 test_011:
@@ -229,7 +228,7 @@ test_011:
     mov [word_write_001],cx
     cmp [word_write_001],#$2211
     jz test_011_ok
-    hlt
+    {get_tail_fail()}
 test_011_ok:
 
 test_012:
@@ -238,7 +237,7 @@ test_012:
     mov [word_write_001],cl
     cmp [word_write_001],#$2293
     jz test_012_ok
-    hlt
+    {get_tail_fail()}
 test_012_ok:
 
 test_013:
@@ -246,7 +245,7 @@ test_013:
     mov [word_write_001],#$4312
     cmp [word_write_001],#$4312
     jz test_013_ok
-    hlt
+    {get_tail_fail()}
 test_013_ok:
 
 test_014:
@@ -254,7 +253,7 @@ test_014:
     mov byte [word_write_001],#$43
     cmp byte [word_write_001],#$43
     jz test_014_ok
-    hlt
+    {get_tail_fail()}
 test_014_ok:
     jmp test_015_go
 
@@ -274,7 +273,7 @@ test_015_go:
     mov ax,[bp + di]
     cmp ax,#$a5e5
     jz test_015_ok
-    hlt
+    {get_tail_fail()}
 test_015_ok:
     jmp test_016_go
  
@@ -286,7 +285,7 @@ test_016_go:
     mov al,[test_016]
     cmp ax,#$ff32
     jz test_016_ok
-    hlt
+    {get_tail_fail()}
 test_016_ok:
  
 test_017:
@@ -298,7 +297,7 @@ test_017_go:
     mov ax,#$13ff
     cmp ax,[test_017]
     jz test_017_ok
-    hlt
+    {get_tail_fail()}
 test_017_ok:
  
 test_018:
@@ -306,14 +305,14 @@ test_018:
     mov ax,#$ff12
     cmp ax,#$ff12
     jz test_018_ok1
-    hlt
+    {get_tail_fail()}
 test_018_ok1:
     xor ax,ax
     mov bx,ax
     mov bl,#$12
     cmp bx,#$12
     jz test_018_ok2
-    hlt
+    {get_tail_fail()}
 test_018_ok2:
     jmp test_019_go
 
@@ -340,7 +339,7 @@ test_019_go:
     mov ax,[bp + si]
     cmp ax,#$1a00
     jz test_019_ok
-    hlt
+    {get_tail_fail()}
 test_019_ok:
     jmp test_01a_go
 
@@ -359,12 +358,12 @@ test_01a_go:
     mov bx,[test_01a]
     cmp [test_01a],#$8382
     jz test_01a_ok1
-    hlt
+    {get_tail_fail()}
 test_01a_ok1:
     sub di,#2
     cmp di,#test_01a
     jz test_01a_ok2
-    hlt
+    {get_tail_fail()}
 test_01a_ok2:
 
 finish:

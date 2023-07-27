@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, emit_tail_fail, get_tail_fail
 import sys
 
 p = sys.argv[1]
@@ -35,7 +35,7 @@ for reg in 'AX', 'CX', 'DX', 'BX', 'BP', 'SI', 'DI', 'ES':
     fh.write(f'\tcmp ax,#${some_value:04x}\n')
     l0 = f'ok___{reg}'
     fh.write(f'\tjz {l0}\n')
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
     fh.write(f'{l0}:\n')
 
     # alter test-register
@@ -47,7 +47,7 @@ for reg in 'AX', 'CX', 'DX', 'BX', 'BP', 'SI', 'DI', 'ES':
     fh.write(f'\tcmp $7fe,#${some_value:04x}\n')
     l1 = f'ok_a_{reg}'
     fh.write(f'\tjz {l1}\n')
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
     fh.write(f'{l1}:\n')
 
     # check if pop returns expected value
@@ -57,7 +57,7 @@ for reg in 'AX', 'CX', 'DX', 'BX', 'BP', 'SI', 'DI', 'ES':
     fh.write(f'\tcmp ax,#${some_value:04x}\n')
     l2 = f'ok_b_{reg}'
     fh.write(f'\tjz {l2}\n')
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
     fh.write(f'{l2}:\n')
 
 fh.write('\tjmp skip_dw_1\n')
@@ -70,7 +70,7 @@ fh.write('\tpop [store_field]\n')
 fh.write('\tmov ax,[store_field]\n')
 fh.write('\tcmp ax,#$aa33\n')
 fh.write('\tjz test_ok\n')
-fh.write('\thlt\n')
+emit_tail_fail(fh)
 fh.write('test_ok:\n')
 
 fh.write('''
@@ -84,7 +84,7 @@ fh.write('''
     mov ds,cx
     cmp ax,#$123
     jz ds_test_1
-    hlt
+    {get_tail_fail()}
 ds_test_1:
 ''')
 
@@ -99,7 +99,7 @@ skip_dw_2:
     mov ax,sp
     cmp ax,#$3321
     jnz pop_sp_fail
-    hlt
+    {get_tail_fail()}
 pop_sp_fail:
     mov sp,bx
 ''')
@@ -112,12 +112,12 @@ fh.write('''
     mov di,ax
     cmp [di],bx
     jnz pop_sp_fail2
-    hlt
+    {get_tail_fail()}
 pop_sp_fail2:
     pop sp
     cmp bx,sp
     jnz pop_sp_fail3
-    hlt
+    {get_tail_fail()}
 pop_sp_fail3:
 ''')
 
@@ -147,7 +147,7 @@ fh.write('''
     mov ax,ss
     cmp ax,#$2
     jz ss_test_ok
-    hlt
+    {get_tail_fail()}
 ss_test_ok:
 
     xor ax,ax
@@ -161,7 +161,7 @@ fh.write('''
     pop ax
     cmp ax,#$0000
     jz cs_push_ok
-    hlt
+    {get_tail_fail()}
 cs_push_ok:
 ''')
 
@@ -175,7 +175,7 @@ ignore_word:
     pop ax
     cmp ax,#$4a9f
     jz push_word_ok
-    hlt
+    {get_tail_fail()}
 push_word_ok:
 ''')
 
@@ -191,7 +191,7 @@ ignore_word2:
     mov ax,[pop_word]
     cmp ax,#$2735
     jz push_word_ok2
-    hlt
+    {get_tail_fail()}
 push_word_ok2:
 ''')
 

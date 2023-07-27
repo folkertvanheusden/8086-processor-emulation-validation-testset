@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_rcl, flags_rcr, flags_rol, flags_ror, flags_sal, flags_sar, flags_shr
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, emit_tail_fail
 from values_16b import b16_values
 import sys
 
@@ -100,8 +100,7 @@ def emit_test(width, v1, shift, carry, instr):
 
     fh.write(f'\tcmp {target_name},#${check_val:02x}\n')
     fh.write(f'\tjz ok_{label}\n')
-
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
 
     fh.write(f'ok_{label}:\n')
 
@@ -115,7 +114,7 @@ def emit_test(width, v1, shift, carry, instr):
         fh.write(f'\tand ax,#${flags_mask:04x}\n')
     fh.write(f'\tcmp ax,#${flags:04x}\n')
     fh.write(f'\tjz next_{label}\n')
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
 
     fh.write(f'next_{label}:\n')
     fh.write('\n')

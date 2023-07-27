@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, get_tail_fail
 import sys
 
 p = sys.argv[1]
@@ -9,14 +9,13 @@ fh = open(p + '/' + 'misc2.asm', 'w')
 
 emit_header(fh)
 
-fh.write(
-'''
+fh.write(f'''
 test_019:
     mov si,#$0019
     mov ax,#test_019_continue0
     push ax
     ret
-    hlt
+    {get_tail_fail()}
     org $2000
 test_019_continue0:
     mov ax,#$100
@@ -35,7 +34,7 @@ test_019_continue0:
     nop
     nop
     nop
-    hlt
+    {get_tail_fail()}
     org $3000
 test_019_continue1:
     nop

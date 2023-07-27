@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_cmp16
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, emit_tail_fail
 from values_16b import get_pairs_16b
 import sys
 
@@ -71,7 +71,7 @@ def emit_test(v1, v2, carry):
 
         fh.write(f'\tcmp ax,#${v1:04x}\n')
         fh.write(f'\tjz ok_{label}\n')
-        fh.write(f'\thlt\n')
+        emit_tail_fail(fh)
 
         # verify flags
         fh.write(f'ok_{label}:\n')
@@ -79,7 +79,7 @@ def emit_test(v1, v2, carry):
         fh.write(f'\tand ax,#$0fff\n')
         fh.write(f'\tcmp ax,#${flags:04x}\n')
         fh.write(f'\tjz next_{label}\n')
-        fh.write(f'\thlt\n')
+        emit_tail_fail(fh)
 
         # TODO: verify flags
         fh.write(f'next_{label}:\n')

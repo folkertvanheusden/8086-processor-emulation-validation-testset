@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, emit_tail_fail
 import sys
 
 p = sys.argv[1]
@@ -17,8 +17,9 @@ test_003:
     DB $EA ; opcode for jump far
     DW $0  ; offset
     DW $1000 ; segment
-    hlt
 ''')
+
+emit_tail_fail(fh)
 
 fh.close()
 

@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, emit_tail_fail
 import sys
 
 p = sys.argv[1]
@@ -20,7 +20,7 @@ for test_v in (0, 127, 128, 129, 255, 254):
     fh.write(f'\tcmp ax, #${test_v:04x}\n')
     label1 = f'test_1_{test_v & 0xff}'
     fh.write(f'\tjz {label1}\n')
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
     fh.write(f'{label1}:\n')
 
 for test_v in (0, 127, 128, 129, 255, 254, 32766, 32767, 32768, 32769, 65535, 65534):
@@ -33,7 +33,7 @@ for test_v in (0, 127, 128, 129, 255, 254, 32766, 32767, 32768, 32769, 65535, 65
     fh.write(f'\tcmp dx, #${dx:04x}\n')
     label2 = f'test_2_test_{test_v}'
     fh.write(f'\tjz {label2}\n')
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
     fh.write(f'{label2}:\n')
 
 emit_tail(fh)

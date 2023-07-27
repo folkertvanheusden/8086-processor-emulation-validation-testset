@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_cmp
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, emit_tail_fail
 import sys
 
 p = sys.argv[1]
@@ -62,14 +62,14 @@ def emit_test(al, val, carry, instr):
     fh.write(f'\tcmp al,#${al:02x}\n')
     fh.write(f'\tjz ok_a_{label}\n')
 
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
 
     fh.write(f'ok_a_{label}:\n')
 
     fh.write(f'\tcmp bl,#${val:02x}\n')
     fh.write(f'\tjz ok_b_{label}\n')
 
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
 
     fh.write(f'ok_b_{label}:\n')
 
@@ -78,7 +78,7 @@ def emit_test(al, val, carry, instr):
     fh.write(f'\tand ax,#$0fff\n')
     fh.write(f'\tcmp ax,#${flags:04x}\n')
     fh.write(f'\tjz next_{label}\n')
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
 
     if instr >= 2:
         fh.write(f'field_{label}:\n')

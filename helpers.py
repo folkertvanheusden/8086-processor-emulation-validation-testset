@@ -33,3 +33,10 @@ def emit_tail(fh):
     fh.write('\tmov al,#$ff\n')
     fh.write('\tout $80,al\n')  # set "Manufacturing Diagnostics port" to ff
     fh.write('\thlt\n')
+
+def get_tail_fail():
+    # to let emulator something was quite right
+    return '\thlt\n'
+
+def emit_tail_fail(fh):
+    fh.write(get_tail_fail())

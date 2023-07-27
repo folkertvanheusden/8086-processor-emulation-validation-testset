@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_add_sub_cp
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, emit_tail_fail
 import sys
 
 p = sys.argv[1]
@@ -83,14 +83,14 @@ for carry in range(0, 2):
             fh.write(f'\tand cx,#$7ff\n')
             fh.write(f'\tcmp cx,#${result_flags:04x}\n')
             fh.write(f'\tjz {label}_3_ok\n')
-            fh.write(f'\thlt\n')
+            emit_tail_fail(fh)
             fh.write(f'\t{label}_3_ok:\n')
 
             fh.write(f'\t; check result of daa\n')
             fh.write(f'\tpop ax\n')
             fh.write(f'\tcmp al,#${result_value:02x}\n')
             fh.write(f'\tjz {label}_4_ok\n')
-            fh.write(f'\thlt\n')
+            emit_tail_fail(fh)
             fh.write(f'\t{label}_4_ok:\n')
 
             n += 1
@@ -183,14 +183,16 @@ for carry in range(0, 2):
             fh.write(f'\tand cx,#$7ff\n')
             fh.write(f'\tcmp cx,#${result_flags:04x}\n')
             fh.write(f'\tjz {label}_3_ok\n')
-            fh.write(f'\thlt\n')
+
+            emit_tail_fail(fh)
+
             fh.write(f'\t{label}_3_ok:\n')
 
             fh.write(f'\t; check result of daa\n')
             fh.write(f'\tpop ax\n')
             fh.write(f'\tcmp al,#${result_value:02x}\n')
             fh.write(f'\tjz {label}_4_ok\n')
-            fh.write(f'\thlt\n')
+            emit_tail_fail(fh)
             fh.write(f'\t{label}_4_ok:\n')
 
             n += 1

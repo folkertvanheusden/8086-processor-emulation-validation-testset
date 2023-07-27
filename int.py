@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, emit_tail_fail, get_tail_fail
 import sys
 
 p = sys.argv[1]
@@ -9,8 +9,7 @@ fh = open(p + '/' + 'int.asm', 'w')
 
 emit_header(fh)
 
-fh.write(
-'''
+fh.write(f'''
 ; DIV (3)
 ; divide by zero
 test_001:
@@ -41,11 +40,11 @@ test_001_skip:
 	div [test_001_word]
     cmp bx,#$7777
     jz test_0019_ok
-    hlt
+    {get_tail_fail()}
 test_0019_ok:
     cmp ax,#$e392
     jnz test_001a_ok
-    hlt
+    {get_tail_fail()}
 test_001a_ok:
 
 ''')
@@ -72,7 +71,7 @@ for i in range(0x1, 0x100):
     fh.write(f'\tint {i}\n')  # invoke
     fh.write(f'\tcmp dx,#{i}\n')  # check
     fh.write(f'\tjz {vector_label}_ok\n')
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
     fh.write(f'{vector_label}_ok:\n')
     fh.write(f'\n')
 

@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, get_tail_fail
 import sys
 
 p = sys.argv[1]
@@ -9,13 +9,12 @@ fh = open(p + '/' + 'jmp_call_ret.asm', 'w')
 
 emit_header(fh)
 
-fh.write(
-'''
+fh.write(f'''
 ; JMP NEAR
 test_001:
     mov si,#$0001
     jmp test_001a_ok
-    hlt
+    {get_tail_fail()}
 test_001a_ok:
 
 ; CALL NEAR
@@ -23,10 +22,10 @@ test_002:
     mov si,#$0002
     call test_002_sub
     jmp test_002_ok
-    hlt
+    {get_tail_fail()}
 test_002_sub:
     ret
-    hlt
+    {get_tail_fail()}
 test_002_ok:
     jmp test_003
 
@@ -36,7 +35,7 @@ test_003_data:
 test_003:
     mov si,#$0003
     jmp [test_003_data]
-    hlt
+    {get_tail_fail()}
 test_003_ok:
     jmp test_004
 
@@ -47,10 +46,10 @@ test_004:
     mov si,#$0004
     call [test_004_data]
     jmp test_004_ok
-    hlt
+    {get_tail_fail()}
 test_004_sub:
     ret
-    hlt
+    {get_tail_fail()}
 test_004_ok:
 
 ; retn
@@ -69,11 +68,11 @@ test_005_cont:
     pop bx
     cmp bx,#$0004
     jz test_005_contb
-    hlt
+    {get_tail_fail()}
 test_005_contb:
     cmp ax,sp
     jz test_005_ok
-    hlt
+    {get_tail_fail()}
 test_005_ok:
 
 finish:
@@ -84,7 +83,7 @@ label = 'jmp_test_'
 for i in range(0, 1024):
     fh.write(f'''
     jmp {label}{i}
-    hlt
+    {get_tail_fail()}
 {label}{i}:
     ''')
 

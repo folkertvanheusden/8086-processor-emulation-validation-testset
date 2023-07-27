@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from flags import parity, flags_add_sub_cp
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, emit_tail_fail
 import sys
 
 p = sys.argv[1]
@@ -54,7 +54,7 @@ for al in range(0, 256):
     fh.write(f'\tcmp al,#${neg_val:02x}\n')
     fh.write(f'\tjz ok_{label}\n')
 
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
 
     fh.write(f'ok_{label}:\n')
 
@@ -63,7 +63,7 @@ for al in range(0, 256):
     fh.write(f'\tand ax,#$0fff\n')
     fh.write(f'\tcmp ax,#${flags:04x}\n')
     fh.write(f'\tjz next_{label}\n')
-    fh.write(f'\thlt\n')
+    emit_tail_fail(fh)
 
     fh.write(f'next_{label}:\n')
     fh.write('\n')

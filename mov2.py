@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 
 from configuration import *
-from helpers import emit_header, emit_tail
+from helpers import emit_header, emit_tail, get_tail_fail
 import sys
 
 p = sys.argv[1]

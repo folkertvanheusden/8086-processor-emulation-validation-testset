@@ -622,9 +622,10 @@ fh.write('\tout $80,al\n')
 sub_label = f'898B_'
 nr = 0
 for rmw in rmws:
-    # some registers ('bx', 'sp', 'bp', 'si', 'di') are skipped as they
-    # interfere with the test
-    for rw in ('ax', 'cx', 'dx', 'sp'):
+    for rw in ('ax', 'cx', 'dx', 'bx', 'sp', 'bp', 'si', 'di'):
+        if rw in rmw[0].lower():
+            continue
+
         current_label = label + sub_label + f'{nr}'
         nr += 1
 

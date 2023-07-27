@@ -151,9 +151,9 @@ for target in (
     {label}_{target[0]}_ok:
         mov {target[0]},ax
 
-    ''')
+        mov sp,#${program_offset:04x}
 
-fh.write(f'\tmov sp,{program_offset:04x}\n')
+    ''')
 
 rmws = (
     ('[BX + SI]',  # R/M to work on/with
@@ -626,6 +626,8 @@ for rmw in rmws:
             jz {current_label}_ok
             hlt
             {current_label}_ok:
+
+            mov sp,#${program_offset:04x}
         ''')
 
         # 8B
@@ -640,9 +642,9 @@ for rmw in rmws:
             jz {current_label}_ok2
             hlt
             {current_label}_ok2:
-        ''')
 
-fh.write(f'\tmov sp,{program_offset:04x}\n')
+            mov sp,#${program_offset:04x}
+        ''')
 
 # 8C/8E
 
@@ -657,7 +659,7 @@ for rmw in rmws:
 
         # 8C
         fh.write(f'''
-            mov sp,{program_offset:04x}
+            mov sp,#${program_offset:04x}
             call undo_changes
 
             {rmw[1]}
@@ -683,7 +685,7 @@ for rmw in rmws:
 
         # 8E
         fh.write(f'''
-            mov sp,{program_offset:04x}
+            mov sp,#${program_offset:04x}
             call undo_changes
 
             {rmw[3].replace('register', 'ax')}

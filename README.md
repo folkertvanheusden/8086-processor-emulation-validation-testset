@@ -6,6 +6,7 @@ what it is
 This software tries to verify the emulation of an Intel 8086/8088 processor.
 It does this by producing a few gigabytes of assembly-code. This assembly-
 code shall then be runned on the emulator under test.
+The test set has been verified against a NEC v20 and OKI 80C88 processor.
 
 
 how it works
@@ -48,7 +49,7 @@ To do so, run:
 
 	run-test-pi86.sh
 
-Note that this requires 'bash' and 'GNU Parallel'.
+Note that this requires 'bash', 'as86' and 'GNU Parallel'.
 
 
 bugs

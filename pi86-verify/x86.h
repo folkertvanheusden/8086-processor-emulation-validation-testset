@@ -49,7 +49,7 @@ using namespace std;
 typedef struct
 {
 	int address;
-	bool write;
+	enum { m_read, m_write, io_read, io_write } action;
 	uint8_t value;
 } history_t;
 

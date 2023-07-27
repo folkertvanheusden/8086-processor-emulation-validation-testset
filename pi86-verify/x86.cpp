@@ -282,13 +282,13 @@ std::pair<std::vector<history_t>, bool> Start_System_Bus(int Processor)
 						Write_To_Data_Port_0_7(RAM[Address]);
 						CLK(); CLK();
 						Data_Bus_Direction_8088_IN();
-						history.push_back({ Address, false, RAM[Address] });
+						history.push_back({ Address, history_t::m_read, RAM[Address] });
 						break;
 						//Write Mem
 					case 0x05:
 						RAM[Address] = Read_From_Data_Port_0_7();
 						CLK(); CLK();
-						history.push_back({ Address, true, RAM[Address] });
+						history.push_back({ Address, history_t::m_write, RAM[Address] });
 						break;
 						//Read IO
 					case 0x06:
@@ -296,6 +296,7 @@ std::pair<std::vector<history_t>, bool> Start_System_Bus(int Processor)
 						Write_To_Data_Port_0_7(IO[Address]);
 						CLK(); CLK();
 						Data_Bus_Direction_8088_IN();
+						history.push_back({ Address, history_t::io_read, IO[Address] });
 						break;
 						//Write IO
 					case 0x07:
@@ -307,6 +308,7 @@ std::pair<std::vector<history_t>, bool> Start_System_Bus(int Processor)
 						}
 
 						CLK(); CLK();
+						history.push_back({ Address, history_t::io_write, IO[Address] });
 						break;
 						//Interrupt
 					case 0x02:

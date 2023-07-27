@@ -18,10 +18,18 @@ int main(int argc, char* argv[])
 		FILE *fh = fopen(argv[2], "w");
 
 		for(auto & record : history.first) {
-			if (record.write)
-				fprintf(fh, "WRITE %04x %02x\n", record.address, record.value);
-			else
-				fprintf(fh, "READ %04x %02x\n", record.address, record.value);
+			const char *action = "?";
+
+			if (record.action == history_t::m_read)
+				action = "MREAD";
+			else if (record.action == history_t::io_read)
+				action = "IOREAD";
+			else if (record.action == history_t::m_write)
+				action = "MWRITE";
+			else if (record.action == history_t::io_write)
+				action = "IOWRITE";
+
+			fprintf(fh, "%s %04x %02x\n", action, record.address, record.value);
 		}
 
 		fclose(fh);

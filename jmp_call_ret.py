@@ -79,6 +79,7 @@ test_005_ok:
 finish:
 ''')
 
+# chain of jmps
 label = 'jmp_test_'
 for i in range(0, 1024):
     fh.write(f'''
@@ -87,6 +88,7 @@ for i in range(0, 1024):
 {label}{i}:
     ''')
 
+# chain of calls
 label = 'call_test_'
 for i in range(0, 768):  # 768 should fit on the stack by a margin
     if i > 0:
@@ -104,5 +106,39 @@ for i in range(0, 768):  # 768 should fit on the stack by a margin
         fh.write(f'{label}{i}:\n')
 
 fh.write('\tret\n')
+
+fh.close()
+
+#
+
+fh = open(p + '/' + 'jmp_call_ret_B.asm', 'w')
+
+emit_header(fh)
+
+# chain of INTs
+fh.write(f'''
+    jmp skip_irq_vector
+
+irq_vector:
+    cmp cx,#$0
+    jz end_chain
+
+    dec cx
+    int $10
+
+end_chain:
+    iret
+
+skip_irq_vector:
+    mov di,#$40
+    mov [di],#irq_vector
+    mov [di + 2],#0
+
+    mov cx,#260
+
+    int $10
+''')
+
+emit_tail(fh)
 
 fh.close()

@@ -79,6 +79,30 @@ test_005_ok:
 finish:
 ''')
 
-emit_tail(fh)
+label = 'jmp_test_'
+for i in range(0, 1024):
+    fh.write(f'''
+    jmp {label}{i}
+    hlt
+{label}{i}:
+    ''')
+
+label = 'call_test_'
+for i in range(0, 768):  # 768 should fit on the stack by a margin
+    if i > 0:
+        fh.write(f'''
+        call {label}{i}
+        ret
+    {label}{i}:
+        ''')
+
+    else:
+        fh.write(f'\tcall {label}{i}\n')
+
+        emit_tail(fh)
+
+        fh.write(f'{label}{i}:\n')
+
+fh.write('\tret\n')
 
 fh.close()

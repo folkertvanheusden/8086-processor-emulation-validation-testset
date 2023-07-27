@@ -73,7 +73,7 @@ fh.write('\tjz test_ok\n')
 emit_tail_fail(fh)
 fh.write('test_ok:\n')
 
-fh.write('''
+fh.write(f'''
     mov bx,#$123
     mov cx,#$0000
     mov ds,bx
@@ -89,7 +89,7 @@ ds_test_1:
 ''')
 
 # pop SP
-fh.write('''
+fh.write(f'''
     jmp skip_dw_2
     dw $3321
 skip_dw_2:
@@ -105,7 +105,7 @@ pop_sp_fail:
 ''')
 
 # push SP
-fh.write('''
+fh.write(f'''
     mov bx,sp
     push sp
     mov ax,sp
@@ -122,7 +122,7 @@ pop_sp_fail3:
 ''')
 
 # push/pop ss
-fh.write('''
+fh.write(f'''
     ; adjust sp so that ss can be changed
     mov ax,sp
     sub ax,#$20
@@ -155,7 +155,7 @@ ss_test_ok:
 ''')
 
 # push cs
-fh.write('''
+fh.write(f'''
     push cs
 
     pop ax
@@ -166,7 +166,7 @@ cs_push_ok:
 ''')
 
 # push value from [memory]
-fh.write('''
+fh.write(f'''
     jmp ignore_word
 push_word:
     dw $4a9f
@@ -180,7 +180,7 @@ push_word_ok:
 ''')
 
 # push value from [memory]
-fh.write('''
+fh.write(f'''
     jmp ignore_word2
 pop_word:
     dw $0000

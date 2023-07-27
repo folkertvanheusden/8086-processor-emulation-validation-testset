@@ -223,7 +223,7 @@ emit_tail_fail(fh)
 fh.write(f'{label}_ok_end2b:\n')
 
 # LODSB (or any other) starting with CX==0
-fh.write('''
+fh.write(f'''
     mov cx,#$0000
     mov ax,#$1000
     mov si,ax

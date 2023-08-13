@@ -19,7 +19,7 @@ def emit_header(fh):
     fh.write('\n')
     fh.write('\tmov ax,#intvec\n')  # make sure trace-int does not confuse anything
     fh.write('\tmov word [4],ax\n')
-    fh.write('\txor ax,ax\n')
+    fh.write('\tmov ax,cs\n')
     fh.write('\tmov word [6],ax\n')
     fh.write('\tjmp init_continue\n')
     fh.write('intvec:\n')

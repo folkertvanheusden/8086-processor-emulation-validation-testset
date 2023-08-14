@@ -31,7 +31,7 @@ kb_int_vector:
 	; store
 	mov interrupt_triggered,al
 	;
-	cmp send_eoi,#$01
+	cmp byte send_eoi,#$01
 	jnz skip_eoi
 	;
 	mov al,#$20  ; EOI code

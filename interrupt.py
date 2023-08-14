@@ -13,8 +13,17 @@ fh.write(f'''
 	; skip over interrupt vector
 	jmp skip_over_interrupt_vector
 
+progress:
+	dw $0
+
 interrupt_triggered:
 	db $00
+send_eoi:
+	db $01
+
+	nop
+	nop
+
 kb_int_vector:
 	push ax
 	; retrieve character from keybboard
@@ -22,17 +31,69 @@ kb_int_vector:
 	; store
 	mov interrupt_triggered,al
 	;
+	cmp send_eoi,#$01
+	jnz skip_eoi
+	;
 	mov al,#$20  ; EOI code
 	out $20,al  ; send 'end of interrupt'
 	;
+skip_eoi:
 	pop ax
 	iret
+
+unmask_keyboard:
+	; * PUT OCW1
+	push AX
+	; 8259 port 21
+	mov al,#$fd
+	; IMR, interrupt mask register
+	; only allow irq 1
+	out $21,al
+	pop AX
+	ret
+
+mask_keyboard:
+	; * PUT OCW1
+	push AX
+	; 8259 port 21
+	mov al,#$ff
+	; IMR, interrupt mask register
+	; allow no interrupts
+	out $21,al
+	pop AX
+	ret
 
 clear_interrupt_flag:
 	push ax
 	xor ax,ax
 	mov interrupt_triggered,al
 	pop ax
+	ret
+
+wait_interrupt_success:
+	push cx
+	mov cx,#0000
+loop_02:
+	cmp byte interrupt_triggered,#$aa
+	jz int_received
+	loop loop_02
+	hlt
+int_received:
+	pop cx
+	ret
+
+wait_interrupt_none:
+	push cx
+	mov cx,#0000
+loop_win:
+	cmp byte interrupt_triggered,#$aa
+	jz win_int_received2
+	loop loop_win
+	jp loop_win_ok
+win_int_received2:
+	hlt ; error!
+loop_win_ok:
+	pop cx
 	ret
 
 reset_keyboard:
@@ -52,6 +113,7 @@ loop_01:
 	out $61,al
 	ret
 
+; *** MAIN ***
 skip_over_interrupt_vector:
 	; set pointer to vector routine
 	mov ax,#kb_int_vector
@@ -68,8 +130,8 @@ skip_over_interrupt_vector:
 
 	; * PUT ICW2?
 	; 8259 port 21
-	mov al,#$00
-	; interrupt vector 0
+	mov al,#$08
+	; interrupt vector starting at 8
 	out $21,al
 
 	; NO ICW3 because the system has no slaves
@@ -81,12 +143,9 @@ skip_over_interrupt_vector:
 
 	; ******** check if interrupts come when doing STI/CLI ********
 
-	; * PUT OCW1
-	; 8259 port 21
-	mov al,#$fd
-	; IMR, interrupt mask register
-	; only allow irq 1
-	out $21,al
+	mov progress,#$0001
+
+	call unmask_keyboard
 
 	; just to be sure, redundant at this step
 	call clear_interrupt_flag
@@ -97,14 +156,8 @@ skip_over_interrupt_vector:
 	sti
 
 	; wait a while for an interrupt
-	mov cx,#0000
-loop_02:
-	cmp byte interrupt_triggered,#$aa
-	jz int_received
-	loop loop_02
-	hlt
+	call wait_interrupt_success
 
-int_received:
 	; disable interrupts
 	cli
 
@@ -112,16 +165,10 @@ int_received:
 
 	call reset_keyboard
 
+	mov progress,#$0002
+
 	; wait a while and make sure no interrupt comes in
-	mov cx,#0000
-loop_03:
-	cmp byte interrupt_triggered,#$aa
-	jz int_received2
-	loop loop_03
-	jp loop_03_ok
-int_received2:
-	hlt ; error!
-loop_03_ok:
+	call wait_interrupt_none
 
 	; * flush interrupt
 	sti  ; enable interrupts
@@ -133,12 +180,9 @@ wait_for_int:
 
 	; ******** check if no interrupt comes in when doing STI and 8259 mask ********
 
-	; * PUT OCW1
-	; 8259 port 21
-	mov al,#$ff
-	; IMR, interrupt mask register
-	; allow no interrupts
-	out $21,al
+	mov progress,#$100
+
+	call mask_keyboard
 
 	call clear_interrupt_flag
 
@@ -147,15 +191,32 @@ wait_for_int:
 	call reset_keyboard
 
 	; wait a while and make sure no interrupt comes in
-	mov cx,#0000
-loop_04:
-	cmp byte interrupt_triggered,#$0
-	jnz int_received3
-	loop loop_04
-	jp loop_04_ok
-int_received3:
-	hlt
-loop_04_ok:
+	call wait_interrupt_none
+
+	; ******** check if no interrupt comes in when the previous is not EOId ********
+
+	mov progress,#$200
+
+	call unmask_keyboard
+
+	; make sure no EOI is send to the 8259
+	mov send_eoi,#$00
+
+	call clear_interrupt_flag
+
+	; generate an interrupt
+	call reset_keyboard
+	; wait for the generated interrupt
+	call wait_interrupt_success
+
+	mov progress,#$201
+
+	call clear_interrupt_flag
+	; generate another interrupt
+	call reset_keyboard
+	call wait_interrupt_none
+
+	; ***
 ''')
 
 emit_tail(fh)

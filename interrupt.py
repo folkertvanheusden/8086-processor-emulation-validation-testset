@@ -200,7 +200,7 @@ wait_for_int:
 	call unmask_keyboard
 
 	; make sure no EOI is send to the 8259
-	mov send_eoi,#$00
+	mov byte send_eoi,#$00
 
 	call clear_interrupt_flag
 

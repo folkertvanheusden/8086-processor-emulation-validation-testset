@@ -40,6 +40,9 @@ instructions.
 When successfully executed, 0xa5ee in the SI register and then HLT is
 invoked. A failed test only runs HLT at some point.
 
+interrupt.py is a seperate test file. It tests if the emulator emulates
+the pic and interrupt handling correctly.
+
 
 test the test set
 -----------------

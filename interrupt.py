@@ -124,7 +124,7 @@ skip_over_interrupt_vector:
 
 	; * PUT ICW1
 	; 8259 port 20
-	mov al,#$0b
+	mov al,#$13
 	; 00010011 -> ICW1, edge triggered, 8 byte int vector, single 8259, with ICW4
 	out $20,al
 
@@ -184,11 +184,19 @@ wait_for_int:
 
 	call mask_keyboard
 
+	mov progress,#$101
+
 	call clear_interrupt_flag
+
+	mov progress,#$102
 
 	sti
 
+	mov progress,#$103
+
 	call reset_keyboard
+
+	mov progress,#$104
 
 	; wait a while and make sure no interrupt comes in
 	call wait_interrupt_none
@@ -215,6 +223,69 @@ wait_for_int:
 	; generate another interrupt
 	call reset_keyboard
 	call wait_interrupt_none
+
+    ; ********* check if offset is taken care of ********
+    jmp skip_over_new_vector
+
+hlt_vector:
+    hlt
+
+skip_over_new_vector:
+    cli
+
+    ; error vector
+	mov ax,#hlt_vector
+	mov [9 * 4 + 0],ax
+	mov ax,cs
+	mov [9 * 4 + 2],ax
+	; all fine vector
+	mov ax,#kb_int_vector
+	mov [17 * 4 + 0],ax
+	mov ax,cs
+	mov [17 * 4 + 2],ax
+
+	; * PUT ICW1
+	; 8259 port 20
+	mov al,#$13
+	; 00010011 -> ICW1, edge triggered, 8 byte int vector, single 8259, with ICW4
+	out $20,al
+
+	; * PUT ICW2?
+	; 8259 port 21
+	mov al,#$10
+	; interrupt vector starting at 16
+	out $21,al
+
+	; NO ICW3 because the system has no slaves
+
+	; * PUT ICW4
+	; 00001101 -> sequential, buffered master, normal EOI, 80x86 mode
+	mov al,#$0d
+	out $21,al
+
+    ; go!
+
+	mov progress,#$300
+
+	mov byte send_eoi,#$01
+
+	call unmask_keyboard
+
+	mov progress,#$301
+
+	call clear_interrupt_flag
+
+	sti
+
+	mov progress,#$302
+
+	call reset_keyboard
+
+	mov progress,#$303
+
+	call wait_interrupt_success
+
+	mov progress,#$304
 
 	; ***
 ''')

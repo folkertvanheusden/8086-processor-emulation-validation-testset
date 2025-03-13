@@ -25,3 +25,7 @@ python3 or_and_xor_test_16.py test
 python3 push_pop.py test
 python3 rcl_rcr_rol_ror_sal_sar.py test
 python3 strings.py test
+
+### these test(s) require more than only a working cpu
+# this this needs a keyboard and an 8259
+python3 interrupt.py test

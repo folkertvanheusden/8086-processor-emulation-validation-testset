@@ -80,6 +80,8 @@ to do
 * in/out
 * jmp (0xff/5)
 
+* convert to NASM
+
 
 license
 -------

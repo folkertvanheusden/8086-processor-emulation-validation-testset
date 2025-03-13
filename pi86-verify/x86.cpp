@@ -183,7 +183,7 @@ char Read_From_Data_Port_8_15()
 	return ret;
 }
 //Clicks the CLK pin 
-void CLK()
+void CLK_()
 {
 	digitalWrite (PIN_CLK, HIGH);
 	digitalWrite (PIN_CLK, HIGH);
@@ -254,14 +254,17 @@ void Setup()
 	pinMode (A19, INPUT);
 }
 
+#define CLK()  { clk_++; CLK_(); };
+
 //System Bus decoder
-std::pair<std::vector<history_t>, bool> Start_System_Bus(int Processor)
+std::tuple<std::vector<history_t>, bool, int> Start_System_Bus(int Processor)
 {
 	std::vector<history_t> history;
 	bool ok = false;
 
 	int Address = 0;
 	char Memory_IO_Bank = 0;
+	int clk_ = 0;
 
 	if (Processor == 88)
 	{
@@ -302,10 +305,12 @@ std::pair<std::vector<history_t>, bool> Start_System_Bus(int Processor)
 					case 0x07:
 						IO[Address] = Read_From_Data_Port_0_7();
 						if (Address == 0x0080 && IO[Address] == 255) {
-							printf("Success\n");
+//							printf("Success\n");
 							ok = true;
 							goto return_history;
 						}
+//						if (Address == 0x0081 || Address == 0x0082)
+//							printf("%02x %02x\n", Address, IO[Address]);
 
 						CLK(); CLK();
 						history.push_back({ Address, history_t::io_write, IO[Address] });
@@ -348,7 +353,7 @@ std::pair<std::vector<history_t>, bool> Start_System_Bus(int Processor)
 						printf("Default \n");
 						break;
 				}
-			}     
+			}
 			else
 			{
 				unsigned int now = millis();
@@ -491,7 +496,7 @@ std::pair<std::vector<history_t>, bool> Start_System_Bus(int Processor)
 	} 
 
 return_history:
-	return { history, ok };
+	return { history, ok, clk_ };
 }
 void Write_Memory_Array(unsigned long long int Address, char code_for_8088[], int Length)
 {  
@@ -556,13 +561,14 @@ void Write_IO_Word(unsigned long long int Address, unsigned short int word_for_8
 //Resest the x86
 void Reset()
 {
+	int clk_ = 0;
 	digitalWrite (PIN_RESET, HIGH);
 	CLK(); CLK(); CLK(); CLK();
 	CLK(); CLK(); CLK(); CLK();
 	digitalWrite (PIN_RESET, LOW);
 }
 
-std::pair<std::vector<history_t>, bool> Start(int Processor)
+std::tuple<std::vector<history_t>, bool, int> Start(int Processor)
 {
 	//Sets up Ports 
 	Setup();	

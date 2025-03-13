@@ -55,7 +55,7 @@ typedef struct
 
 
 void Reset();	
-std::pair<std::vector<history_t>, bool> Start(int Processor);
+std::tuple<std::vector<history_t>, bool, int> Start(int Processor);
 void Load_Bios(string Bios_file);
 //Memory
 void Write_Memory_Array(unsigned long long int Address, char code_for_8088[], int Length);
